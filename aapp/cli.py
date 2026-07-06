@@ -164,6 +164,26 @@ def cmd_verify(args: argparse.Namespace) -> int:
 
 
 
+
+def cmd_replay(args: argparse.Namespace) -> int:
+    from .replay import ReplayError, write_replay_report
+
+    try:
+        path = write_replay_report(
+            trace_path=args.trace,
+            key_file=args.key_file,
+            scope_path=args.scope,
+            out_path=args.out,
+        )
+    except ReplayError as exc:
+        import sys
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+
+    print(f"PASS: wrote {path}")
+    return 0
+
+
 def cmd_mcp_record(args: argparse.Namespace) -> int:
     from .mcp_recorder_adapter import MCPRecorderAdapterError, record_mcp_style_tool_calls
 
@@ -240,6 +260,13 @@ def build_parser() -> argparse.ArgumentParser:
     verify.add_argument("--key-file", help="dev key file path")
     verify.add_argument("--scope", required=False, help="optional AAPP scope JSON for semantic scope checks")
     verify.set_defaults(func=cmd_verify)
+
+    replay = sub.add_parser("replay", help="replay an AAPP trace into a human-readable report")
+    replay.add_argument("--trace", required=True, help="trace.jsonl path")
+    replay.add_argument("--key-file", required=True, help="dev key file path")
+    replay.add_argument("--scope", required=False, help="optional AAPP scope JSON")
+    replay.add_argument("--out", required=True, help="replay report output path")
+    replay.set_defaults(func=cmd_replay)
 
     mcp_record = sub.add_parser("mcp-record", help="record local MCP-style tool calls through AAPP")
     mcp_record.add_argument("--policy", required=True, help="MCP-style permission policy JSON")
