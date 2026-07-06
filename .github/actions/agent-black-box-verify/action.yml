@@ -1,0 +1,29 @@
+name: Agent Black Box Verify
+description: Verify an Agent Black Box unified session bundle.
+
+inputs:
+  bundle_dir:
+    description: Path to AGENT-BLACK-BOX-BUNDLE.
+    required: true
+  key_file:
+    description: Path to verification key file.
+    required: true
+  report_out:
+    description: Optional Markdown report output path.
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Verify Agent Black Box bundle
+      shell: bash
+      run: |
+        python3 -m aapp.session_bundle verify "${{ inputs.bundle_dir }}" --key-file "${{ inputs.key_file }}"
+
+    - name: Write Agent Black Box report
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.report_out }}" ]; then
+          python3 -m aapp.session_bundle report "${{ inputs.bundle_dir }}" --out "${{ inputs.report_out }}"
+        fi
