@@ -1,23 +1,68 @@
-# Agent Action Provenance Protocol
+# AAPP — Flight Recorder for AI Agent Tool Actions
 
-AAPP is a local reference implementation for tamper-evident evidence records of AI agent actions.
+AAPP is a local reference implementation for tamper-evident AI agent action provenance.
 
-It records what an agent was allowed to do, which tool was requested, what policy decision was made, what artifact was produced, and whether the resulting action trail can be verified and replayed.
+It creates a verifiable action trail for agent/tool workflows:
 
-## Why this exists
+```text
+scope → tool request → policy decision → approval state → trace → replay → evidence bundle
+```
 
-AI agents are moving from text generation into tool use.
+Normal logs tell you something happened.
 
-When an agent can call tools, write files, request approvals, or generate artifacts, teams need more than a chat transcript or application log. They need a structured evidence trail that can answer:
+AAPP tries to prove what the agent was allowed to do, what tool it requested, what policy decided, and whether the evidence was changed later.
 
-- What action was requested?
-- Was it in scope?
-- Which tool was involved?
-- Was the decision allow, deny, or approval-required?
-- Was evidence modified after the fact?
-- Can the action timeline be replayed?
+## Why now
 
-AAPP is an evidence layer for that boundary.
+AI agents are moving from chat into tool use.
+
+MCP makes tool access portable. Agents can connect to files, databases, tools, workflows, and external systems.
+
+That creates a new trust boundary:
+
+```text
+Can the agent use this tool?
+Was the action in scope?
+Was the decision allow, deny, or approval-required?
+Can we verify the evidence after the fact?
+Can a reviewer replay the action timeline?
+```
+
+AAPP is built for that boundary.
+
+## The difference
+
+AAPP is not observability.
+
+AAPP is not a scanner.
+
+AAPP is not a SIEM.
+
+AAPP is not a pentest bot.
+
+AAPP is provenance for the agent-action boundary.
+
+```text
+OpenTelemetry helps observe systems.
+Sigstore/Rekor helps prove software supply-chain events.
+AAPP focuses on AI agent tool actions.
+```
+
+## What it proves today
+
+AAPP v1.1 can show:
+
+- a scoped action trail
+- tool request records
+- policy decisions: `allow`, `deny`, `require_human_approval`
+- hash-linked JSONL traces
+- dev-only HMAC-SHA384 signatures
+- strict verification
+- replay reports
+- evidence bundles
+- secret-like value redaction
+- denied tool attempts that remain visible without executing
+- local MCP-style tool boundary evidence
 
 ## Current baseline
 
@@ -26,111 +71,42 @@ Current public baseline:
 - `aapp-baseline-v1.1`
 - public demo bundle
 - external review packet
-- local MCP-style tool boundary research
+- local MCP-style boundary research
 - GitHub Actions boundary review
 - self-security advisory drill
 
 Release:
 
-- https://github.com/andrewtran97/AAPP/releases/tag/aapp-baseline-v1.1
+https://github.com/andrewtran97/AAPP/releases/tag/aapp-baseline-v1.1
 
-## What AAPP does
+## 3-minute challenge
 
-AAPP currently provides:
-
-- local JSONL action records
-- SHA-384 hash-linked traces
-- dev-only HMAC-SHA384 signatures
-- scope-gated recording
-- strict trace verification
-- replay reports
-- evidence bundle generation
-- redaction of secret-like values before report generation
-- local MCP-style tool decision recording
-- responsible disclosure and review templates
-
-## What AAPP is not
-
-AAPP is not:
-
-- a scanner
-- a pentest bot
-- an exploit framework
-- an AI firewall
-- a live MCP server
-- a production signing service
-- a compliance guarantee
-- a post-quantum security implementation
-
-The current signing mode is for local development and reference implementation use only.
-
-## Install
-
-Clone the repository:
+Try to tamper with the evidence.
 
 ```bash
 git clone https://github.com/andrewtran97/AAPP.git
 cd AAPP
-```
 
-Run the test suite:
-
-```bash
 python3 -m unittest discover -s tests -v
-```
 
-## Quick start
-
-Run the local scoped demo:
-
-```bash
-python3 -m aapp.cli demo \
-  --scope examples/simple-tool-call/scope.demo.json \
-  --out evidence/demo
-```
-
-Verify the generated trace:
-
-```bash
-python3 -m aapp.cli verify \
-  evidence/demo/trace.jsonl \
-  --key-file evidence/demo/dev.key
-```
-
-Generate a replay report:
-
-```bash
-python3 -m aapp.cli replay \
-  --trace evidence/demo/trace.jsonl \
-  --key-file evidence/demo/dev.key \
-  --scope examples/simple-tool-call/scope.demo.json \
-  --out evidence/demo/replay_report.md
-```
-
-Create an evidence bundle:
-
-```bash
-python3 -m aapp.cli bundle \
-  --scope examples/simple-tool-call/scope.demo.json \
-  --trace evidence/demo/trace.jsonl \
-  --key-file evidence/demo/dev.key \
-  --report evidence/demo/replay_report.md \
-  --out evidence/demo/AAPP-EVIDENCE-BUNDLE
-```
-
-## MCP-style tool boundary demo
-
-AAPP includes a local MCP-style simulator.
-
-It does not contact a live MCP server, network target, authorization server, external service, or credential store.
-
-Run:
-
-```bash
 bash scripts/build_a1_mcp_boundary_research.sh evidence/a1-mcp-boundary
+
+python3 -m aapp.cli verify \
+  evidence/a1-mcp-boundary/recorded/trace.jsonl \
+  --key-file evidence/a1-mcp-boundary/recorded/dev.key
 ```
 
-Expected output:
+Now modify one line in:
+
+```text
+evidence/a1-mcp-boundary/recorded/trace.jsonl
+```
+
+Run verify again.
+
+If verification still passes after tampering, open an issue.
+
+## What the demo produces
 
 ```text
 evidence/a1-mcp-boundary/
@@ -163,7 +139,21 @@ AAPP-EVIDENCE-BUNDLE/
   verification_result.md
 ```
 
-The bundle is designed to make local agent/tool activity easier to review, replay, and verify.
+The bundle is designed to make local agent/tool activity easier to verify, replay, and review.
+
+## What AAPP is not
+
+AAPP does not claim:
+
+- production security certification
+- post-quantum security
+- Qubes certification
+- government affiliation
+- compliance guarantee
+- live MCP security
+- production signing infrastructure
+
+The current signing mode is dev-only.
 
 ## Security boundary
 
@@ -181,32 +171,28 @@ Do not use AAPP for:
 
 Security issues should not be reported in public issues. See `SECURITY.md`.
 
-## Project status
-
-AAPP is an early reference implementation.
-
-The current baseline is useful for:
-
-- local demos
-- protocol review
-- MCP-style tool boundary research
-- evidence bundle review
-- external technical feedback
-
-It is not ready for production signing, regulated compliance use, or high-assurance security claims.
-
-## Reviewers
+## Reviewer entry point
 
 Start here:
 
 - Release v1.1: https://github.com/andrewtran97/AAPP/releases/tag/aapp-baseline-v1.1
 - Public launch issue: https://github.com/andrewtran97/AAPP/issues/25
+- External review request: https://github.com/andrewtran97/AAPP/issues
 - Security policy: `SECURITY.md`
 - MCP boundary research: `docs/MCP_BOUNDARY_RESEARCH.md`
 - GitHub Actions boundary review: `docs/GITHUB_ACTIONS_BOUNDARY_REVIEW.md`
-- External review pack: release asset `aapp-external-review-packet-v1.1.tar.gz`
 
-## Repository governance
+Useful review questions:
+
+```text
+1. Could you understand what AAPP does in 3 minutes?
+2. Is the evidence bundle understandable?
+3. Is this meaningfully different from a normal audit log?
+4. What blocks pilot use?
+5. What claim should be removed or softened?
+```
+
+## Governance
 
 Main branch changes are gated by:
 
@@ -217,3 +203,18 @@ Main branch changes are gated by:
 - force-push block
 - deletion restriction
 - linear history
+
+## Project status
+
+AAPP is an early reference implementation.
+
+It is useful for:
+
+- protocol review
+- local demos
+- agent/tool evidence review
+- MCP-style boundary research
+- replayable evidence bundle review
+- external technical feedback
+
+It is not ready for production signing, regulated compliance use, or high-assurance security claims.
