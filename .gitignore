@@ -1,2 +1,5 @@
 .claude/
 *.bak.*
+# AAPP generated local evidence
+evidence/
+*.key
