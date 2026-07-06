@@ -1,0 +1,16 @@
+{
+  "schema_version": "0.1.0",
+  "scope_id": "scope-demo-mcp-recorder-local-only",
+  "authorization_status": "authorized",
+  "active_operations_enabled": true,
+  "allowed_actor_types": [
+    "agent"
+  ],
+  "allowed_tool_types": [
+    "file_read",
+    "file_write",
+    "shell",
+    "network"
+  ],
+  "purpose": "local MCP-style recorder adapter demo only; no live network"
+}

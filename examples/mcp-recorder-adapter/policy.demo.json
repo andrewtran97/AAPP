@@ -1,0 +1,16 @@
+{
+  "schema_version": "0.7.0",
+  "policy_id": "policy-demo-mcp-recorder-adapter",
+  "allowed_tools": [
+    "read_file",
+    "write_file",
+    "shell_echo"
+  ],
+  "approval_required_tools": [
+    "write_file"
+  ],
+  "denied_tools": [
+    "blocked_api_call"
+  ],
+  "network_allowed": false
+}

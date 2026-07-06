@@ -163,6 +163,26 @@ def cmd_verify(args: argparse.Namespace) -> int:
     return 1
 
 
+
+def cmd_mcp_record(args: argparse.Namespace) -> int:
+    from .mcp_recorder_adapter import MCPRecorderAdapterError, record_mcp_style_tool_calls
+
+    try:
+        outputs = record_mcp_style_tool_calls(
+            policy_path=args.policy,
+            scope_path=args.scope,
+            out_dir=args.out,
+        )
+    except MCPRecorderAdapterError as exc:
+        import sys
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+
+    for name, path in outputs.items():
+        print(f"PASS: wrote {name}: {path}")
+    return 0
+
+
 def cmd_bundle(args: argparse.Namespace) -> int:
     from .bundle import BundleError, create_evidence_bundle
 
@@ -220,6 +240,12 @@ def build_parser() -> argparse.ArgumentParser:
     verify.add_argument("--key-file", help="dev key file path")
     verify.add_argument("--scope", required=False, help="optional AAPP scope JSON for semantic scope checks")
     verify.set_defaults(func=cmd_verify)
+
+    mcp_record = sub.add_parser("mcp-record", help="record local MCP-style tool calls through AAPP")
+    mcp_record.add_argument("--policy", required=True, help="MCP-style permission policy JSON")
+    mcp_record.add_argument("--scope", required=True, help="AAPP scope JSON file")
+    mcp_record.add_argument("--out", required=True, help="output directory")
+    mcp_record.set_defaults(func=cmd_mcp_record)
 
     bundle = sub.add_parser("bundle", help="create an AAPP evidence bundle")
     bundle.add_argument("--scope", required=True, help="authorized scope JSON file")
