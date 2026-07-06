@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/aapp/agent-action-record.schema.json",
+  "title": "Agent Action Provenance Record",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "record_id",
+    "session_id",
+    "timestamp",
+    "parent_hash",
+    "actor",
+    "tool",
+    "scope",
+    "policy",
+    "input_digest",
+    "output_digest",
+    "artifact_digest",
+    "record_hash",
+    "signature"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "0.1.0"
+    },
+    "record_id": {
+      "type": "string"
+    },
+    "session_id": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "parent_hash": {
+      "type": ["string", "null"]
+    },
+    "actor": {
+      "type": "object",
+      "required": ["actor_id", "actor_type"],
+      "properties": {
+        "actor_id": { "type": "string" },
+        "actor_type": {
+          "type": "string",
+          "enum": ["human", "agent", "service_account", "ci_job"]
+        },
+        "model_id": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "tool": {
+      "type": "object",
+      "required": ["tool_id", "tool_type"],
+      "properties": {
+        "tool_id": { "type": "string" },
+        "tool_type": {
+          "type": "string",
+          "enum": ["file_read", "file_write", "shell", "api_call", "mcp_tool", "approval", "artifact"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "scope": {
+      "type": "object",
+      "required": ["scope_id", "authorization_status"],
+      "properties": {
+        "scope_id": { "type": "string" },
+        "authorization_status": {
+          "type": "string",
+          "enum": ["authorized", "blocked", "review_required"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "policy": {
+      "type": "object",
+      "required": ["policy_id", "decision"],
+      "properties": {
+        "policy_id": { "type": "string" },
+        "decision": {
+          "type": "string",
+          "enum": ["allow", "warn", "block", "require_human_approval"]
+        },
+        "reason": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "approval_ref": {
+      "type": ["string", "null"]
+    },
+    "input_digest": {
+      "type": ["string", "null"]
+    },
+    "output_digest": {
+      "type": ["string", "null"]
+    },
+    "artifact_digest": {
+      "type": ["string", "null"]
+    },
+    "redaction": {
+      "type": "object",
+      "properties": {
+        "raw_secret_stored": { "type": "boolean" },
+        "redaction_policy": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "record_hash": {
+      "type": "string"
+    },
+    "signature": {
+      "type": "object",
+      "required": ["signature_type", "signature_value"],
+      "properties": {
+        "signature_type": { "type": "string" },
+        "signature_value": { "type": "string" },
+        "public_key_ref": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
