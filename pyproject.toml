@@ -1,0 +1,8 @@
+[project]
+name = "agent-action-provenance"
+version = "0.1.0"
+description = "Local reference implementation for Agent Action Provenance Protocol"
+requires-python = ">=3.10"
+
+[tool.setuptools]
+packages = ["aapp"]

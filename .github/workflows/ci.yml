@@ -9,6 +9,7 @@ on:
 jobs:
   basic:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,4 +33,16 @@ jobs:
       - name: Basic file check
         run: |
           test -f README.md
-          echo "OK: README.md exists"
+          test -f spec/agent-action-record.schema.json
+          python3 -m json.tool spec/agent-action-record.schema.json >/dev/null
+          echo "OK: required files exist"
+
+      - name: Run unit tests
+        run: |
+          python3 -m unittest discover -s tests -v
+
+      - name: Run AAPP demo
+        run: |
+          python3 -m aapp.cli demo --out evidence/demo
+          python3 -m aapp.cli verify evidence/demo/trace.jsonl --key-file evidence/demo/dev.key
+          python3 -m aapp.cli report evidence/demo/trace.jsonl --out evidence/demo/evidence.report.md
