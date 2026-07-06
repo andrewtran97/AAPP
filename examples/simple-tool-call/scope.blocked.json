@@ -1,0 +1,9 @@
+{
+  "schema_version": "0.1.0",
+  "scope_id": "scope-demo-blocked",
+  "authorization_status": "blocked",
+  "allowed_actor_types": ["agent"],
+  "allowed_tool_types": ["file_read"],
+  "active_operations_enabled": false,
+  "notes": "Blocked scope used for negative tests."
+}

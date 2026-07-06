@@ -1,0 +1,9 @@
+{
+  "schema_version": "0.1.0",
+  "scope_id": "scope-demo-local-only",
+  "authorization_status": "authorized",
+  "allowed_actor_types": ["agent"],
+  "allowed_tool_types": ["file_read", "file_write", "shell", "artifact"],
+  "active_operations_enabled": true,
+  "notes": "Local demo scope only. No live target scanning. No credential collection."
+}
