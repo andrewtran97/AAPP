@@ -138,6 +138,16 @@ def cmd_demo(args: argparse.Namespace) -> int:
 
 def cmd_verify(args: argparse.Namespace) -> int:
     trace_path = Path(args.trace)
+
+    from .verifier import VerifierError, validate_trace_semantics
+
+    try:
+        validate_trace_semantics(trace_path, args.scope)
+    except VerifierError as exc:
+        import sys
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+
     key = _read_key(Path(args.key_file) if args.key_file else None)
     records = _read_jsonl(trace_path)
 
@@ -187,6 +197,7 @@ def build_parser() -> argparse.ArgumentParser:
     verify = sub.add_parser("verify", help="verify a JSONL action chain")
     verify.add_argument("trace", help="trace.jsonl path")
     verify.add_argument("--key-file", help="dev key file path")
+    verify.add_argument("--scope", required=False, help="optional AAPP scope JSON for semantic scope checks")
     verify.set_defaults(func=cmd_verify)
 
     report = sub.add_parser("report", help="generate Markdown report from JSONL action chain")
