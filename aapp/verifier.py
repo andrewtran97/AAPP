@@ -134,7 +134,7 @@ def validate_record_semantics(
 
         try:
             require_authorized_scope(
-                expected_scope,
+                scope=expected_scope,
                 actor_type=actor_type,
                 tool_type=tool_type,
             )
