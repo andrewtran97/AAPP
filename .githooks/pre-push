@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  if [ "$local_sha" = "0000000000000000000000000000000000000000" ]; then
+    continue
+  fi
+
+  if [ "$remote_sha" = "0000000000000000000000000000000000000000" ]; then
+    range="$local_sha"
+  else
+    range="$remote_sha..$local_sha"
+  fi
+
+  if git log --format=%B "$range" | grep -Eiq '(Claude|Anthropic|Co-Authored-By:.*Claude|Generated with Claude Code|Claude-Session|noreply@anthropic\.com)'; then
+    echo "BLOCKED: commit history contains Claude/Anthropic attribution."
+    exit 1
+  fi
+done

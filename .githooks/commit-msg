@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+msg_file="$1"
+
+if grep -Eiq '(Claude|Anthropic|Co-Authored-By:.*Claude|Generated with Claude Code|Claude-Session|noreply@anthropic\.com)' "$msg_file"; then
+  echo "BLOCKED: commit message contains Claude/Anthropic attribution."
+  exit 1
+fi
