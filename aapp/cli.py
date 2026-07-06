@@ -162,6 +162,27 @@ def cmd_verify(args: argparse.Namespace) -> int:
     print("FAIL: action chain verification failed")
     return 1
 
+
+def cmd_bundle(args: argparse.Namespace) -> int:
+    from .bundle import BundleError, create_evidence_bundle
+
+    try:
+        create_evidence_bundle(
+            scope_path=args.scope,
+            trace_path=args.trace,
+            key_file=args.key_file,
+            report_path=args.report,
+            out_dir=args.out,
+        )
+    except BundleError as exc:
+        import sys
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+
+    print(f"PASS: wrote {args.out}")
+    return 0
+
+
 def cmd_report(args: argparse.Namespace) -> int:
     records = _read_jsonl(Path(args.trace))
     report = _render_report(records)
@@ -199,6 +220,14 @@ def build_parser() -> argparse.ArgumentParser:
     verify.add_argument("--key-file", help="dev key file path")
     verify.add_argument("--scope", required=False, help="optional AAPP scope JSON for semantic scope checks")
     verify.set_defaults(func=cmd_verify)
+
+    bundle = sub.add_parser("bundle", help="create an AAPP evidence bundle")
+    bundle.add_argument("--scope", required=True, help="authorized scope JSON file")
+    bundle.add_argument("--trace", required=True, help="trace.jsonl path")
+    bundle.add_argument("--key-file", required=True, help="dev key file path")
+    bundle.add_argument("--report", required=True, help="Markdown evidence report path")
+    bundle.add_argument("--out", required=True, help="output bundle directory")
+    bundle.set_defaults(func=cmd_bundle)
 
     report = sub.add_parser("report", help="generate Markdown report from JSONL action chain")
     report.add_argument("trace", help="trace.jsonl path")
