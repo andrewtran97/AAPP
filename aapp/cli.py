@@ -187,6 +187,7 @@ def build_parser() -> argparse.ArgumentParser:
     verify = sub.add_parser("verify", help="verify a JSONL action chain")
     verify.add_argument("trace", help="trace.jsonl path")
     verify.add_argument("--key-file", help="dev key file path")
+    verify.add_argument("--scope", required=False, help="optional AAPP scope JSON for semantic scope checks")
     verify.set_defaults(func=cmd_verify)
 
     report = sub.add_parser("report", help="generate Markdown report from JSONL action chain")
