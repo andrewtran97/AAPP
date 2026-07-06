@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  basic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show repository state
+        run: |
+          git status
+          git log -1 --pretty=fuller
+
+      - name: Block Claude/Anthropic attribution
+        run: |
+          if git log --all --format='%H%n%an <%ae>%n%B%n---' \
+            | grep -Eiq 'Claude|Anthropic|Generated with Claude Code|Co-Authored-By:.*Claude|noreply@anthropic\.com'
+          then
+            echo "FAIL: Claude/Anthropic attribution found."
+            exit 1
+          else
+            echo "OK: no Claude/Anthropic attribution found."
+          fi
+
+      - name: Basic file check
+        run: |
+          test -f README.md
+          echo "OK: README.md exists"
