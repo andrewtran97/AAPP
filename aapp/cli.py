@@ -138,6 +138,16 @@ def cmd_demo(args: argparse.Namespace) -> int:
 
 def cmd_verify(args: argparse.Namespace) -> int:
     trace_path = Path(args.trace)
+
+    from .verifier import VerifierError, validate_trace_semantics
+
+    try:
+        validate_trace_semantics(trace_path, args.scope)
+    except VerifierError as exc:
+        import sys
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+
     key = _read_key(Path(args.key_file) if args.key_file else None)
     records = _read_jsonl(trace_path)
 
@@ -206,34 +216,6 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
-    # PHASE05_MAIN_SEMANTIC_VERIFY_GATE
-    # Enforce scoped semantic verification before the legacy hash/signature verifier.
-    # This is intentionally placed at dispatch level because the verify handler name
-    # may change while parsed args are stable.
-    if getattr(args, "scope", None):
-        from .verifier import VerifierError, validate_trace_semantics
-    
-        trace_path = None
-        for _name in ("trace", "trace_path", "trace_file", "jsonl", "path"):
-            _value = getattr(args, _name, None)
-            if isinstance(_value, str) and _value:
-                trace_path = _value
-                break
-    
-        if trace_path is None:
-            for _key, _value in vars(args).items():
-                if isinstance(_value, str) and _value.endswith(".jsonl"):
-                    trace_path = _value
-                    break
-    
-    
-        try:
-            validate_trace_semantics(trace_path, getattr(args, "scope", None))
-        except VerifierError as exc:
-            import sys
-            print(f"FAIL: {exc}", file=sys.stderr)
-            return 1
-    
     return args.func(args)
 
 if __name__ == "__main__":
