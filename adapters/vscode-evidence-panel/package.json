@@ -1,0 +1,35 @@
+{
+  "name": "agent-black-box-evidence-panel",
+  "displayName": "Agent Black Box Evidence Panel",
+  "description": "View Agent Black Box unified session bundle status inside VS Code/Cursor.",
+  "version": "0.0.1",
+  "publisher": "aapp",
+  "private": true,
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:agentBlackBox.openEvidencePanel"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "agentBlackBox.openEvidencePanel",
+        "title": "Agent Black Box: Open Evidence Panel"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.90.0",
+    "typescript": "^5.0.0"
+  }
+}
