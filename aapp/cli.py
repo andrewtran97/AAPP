@@ -9,6 +9,7 @@ from typing import Any, Dict, List
 
 from .crypto import attach_signature, verify_chain
 from .record import create_record
+from .scope import ScopeError, load_scope, require_authorized_scope, scope_id
 
 DEFAULT_DEV_KEY = b"aapp-local-dev-key-do-not-use-in-production"
 
@@ -34,7 +35,8 @@ def _read_key(path: Path | None) -> bytes:
 def _write_dev_key(path: Path) -> None:
     path.write_bytes(DEFAULT_DEV_KEY + b"\n")
 
-def _generate_demo_records() -> List[Dict[str, Any]]:
+def _generate_demo_records(scope_path: str) -> List[Dict[str, Any]]:
+    scope = load_scope(scope_path)
     session_id = "demo-session-001"
     parent_hash = None
     records: List[Dict[str, Any]] = []
@@ -48,13 +50,15 @@ def _generate_demo_records() -> List[Dict[str, Any]]:
     ]
 
     for tool_id, tool_type, decision, reason, input_payload, output_payload, artifact_payload, approval_ref in actions:
+        require_authorized_scope(scope=scope, actor_type="agent", tool_type=tool_type)
+
         record = create_record(
             session_id=session_id,
             parent_hash=parent_hash,
             actor_id="aapp-demo-agent",
             actor_type="agent",
             model_id="local-demo",
-            scope_id="scope-demo-local-only",
+            scope_id=scope_id(scope),
             authorization_status="authorized",
             policy_id="policy-demo-human-controlled",
             tool_id=tool_id,
@@ -94,6 +98,7 @@ def _render_report(records: List[Dict[str, Any]]) -> str:
             f"- Actor: `{record['actor']['actor_id']}`",
             f"- Tool: `{record['tool']['tool_id']}`",
             f"- Tool type: `{record['tool']['tool_type']}`",
+            f"- Scope ID: `{record['scope']['scope_id']}`",
             f"- Policy decision: `{record['policy']['decision']}`",
             f"- Reason: {record['policy']['reason']}",
             f"- Parent hash: `{record['parent_hash']}`",
@@ -115,7 +120,11 @@ def cmd_demo(args: argparse.Namespace) -> int:
     key_path = out_dir / "dev.key"
     report_path = out_dir / "evidence.report.md"
 
-    records = _generate_demo_records()
+    try:
+        records = _generate_demo_records(args.scope)
+    except ScopeError as exc:
+        print(f"BLOCKED: {exc}")
+        return 2
 
     _write_jsonl(trace_path, records)
     _write_dev_key(key_path)
@@ -155,11 +164,23 @@ def cmd_report(args: argparse.Namespace) -> int:
 
     return 0
 
+def cmd_scope_check(args: argparse.Namespace) -> int:
+    try:
+        scope = load_scope(args.scope)
+        require_authorized_scope(scope=scope, actor_type=args.actor_type, tool_type=args.tool_type)
+    except ScopeError as exc:
+        print(f"BLOCKED: {exc}")
+        return 2
+
+    print("PASS: scope authorizes requested operation")
+    return 0
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="aapp", description="AAPP local reference recorder")
     sub = parser.add_subparsers(dest="command", required=True)
 
     demo = sub.add_parser("demo", help="create a local demo evidence bundle")
+    demo.add_argument("--scope", required=True, help="authorized scope JSON file")
     demo.add_argument("--out", default="evidence/demo", help="output directory")
     demo.set_defaults(func=cmd_demo)
 
@@ -172,6 +193,12 @@ def build_parser() -> argparse.ArgumentParser:
     report.add_argument("trace", help="trace.jsonl path")
     report.add_argument("--out", help="output Markdown path")
     report.set_defaults(func=cmd_report)
+
+    scope_check = sub.add_parser("scope-check", help="check whether scope authorizes an operation")
+    scope_check.add_argument("--scope", required=True, help="authorized scope JSON file")
+    scope_check.add_argument("--actor-type", required=True, help="actor type")
+    scope_check.add_argument("--tool-type", required=True, help="tool type")
+    scope_check.set_defaults(func=cmd_scope_check)
 
     return parser
 

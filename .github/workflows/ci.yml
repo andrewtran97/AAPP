@@ -34,7 +34,11 @@ jobs:
         run: |
           test -f README.md
           test -f spec/agent-action-record.schema.json
+          test -f spec/aapp-scope.schema.json
           python3 -m json.tool spec/agent-action-record.schema.json >/dev/null
+          python3 -m json.tool spec/aapp-scope.schema.json >/dev/null
+          python3 -m json.tool examples/simple-tool-call/scope.demo.json >/dev/null
+          python3 -m json.tool examples/simple-tool-call/scope.blocked.json >/dev/null
           echo "OK: required files exist"
 
       - name: Run unit tests
@@ -43,6 +47,17 @@ jobs:
 
       - name: Run AAPP demo
         run: |
-          python3 -m aapp.cli demo --out evidence/demo
+          python3 -m aapp.cli scope-check --scope examples/simple-tool-call/scope.demo.json --actor-type agent --tool-type file_read
+          python3 -m aapp.cli demo --scope examples/simple-tool-call/scope.demo.json --out evidence/demo
           python3 -m aapp.cli verify evidence/demo/trace.jsonl --key-file evidence/demo/dev.key
           python3 -m aapp.cli report evidence/demo/trace.jsonl --out evidence/demo/evidence.report.md
+
+      - name: Block unauthorized scope
+        run: |
+          if python3 -m aapp.cli demo --scope examples/simple-tool-call/scope.blocked.json --out evidence/blocked-demo
+          then
+            echo "FAIL: blocked scope unexpectedly allowed recording"
+            exit 1
+          else
+            echo "OK: blocked scope rejected"
+          fi

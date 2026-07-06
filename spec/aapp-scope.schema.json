@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/aapp/aapp-scope.schema.json",
+  "title": "AAPP Scope File",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "scope_id",
+    "authorization_status",
+    "allowed_actor_types",
+    "allowed_tool_types",
+    "active_operations_enabled"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "0.1.0"
+    },
+    "scope_id": {
+      "type": "string"
+    },
+    "authorization_status": {
+      "type": "string",
+      "enum": ["authorized", "blocked", "review_required"]
+    },
+    "allowed_actor_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["human", "agent", "service_account", "ci_job"]
+      },
+      "minItems": 1
+    },
+    "allowed_tool_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["file_read", "file_write", "shell", "api_call", "mcp_tool", "approval", "artifact"]
+      },
+      "minItems": 1
+    },
+    "active_operations_enabled": {
+      "type": "boolean"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}
