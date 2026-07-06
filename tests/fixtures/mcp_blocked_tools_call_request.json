@@ -1,0 +1,12 @@
+{
+  "jsonrpc": "2.0",
+  "id": 3,
+  "method": "tools/call",
+  "params": {
+    "name": "blocked_delete_secret",
+    "arguments": {
+      "path": ".env",
+      "token": "ghp_secretsecretsecret"
+    }
+  }
+}
