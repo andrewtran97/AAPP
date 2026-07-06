@@ -1,0 +1,10 @@
+{
+  "session_id": "test-session",
+  "cwd": "/tmp/aapp",
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Bash",
+  "tool_input": {
+    "command": "echo hello",
+    "api_key": "sk-test-secret-123456789"
+  }
+}

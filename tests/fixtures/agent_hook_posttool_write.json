@@ -1,0 +1,14 @@
+{
+  "session_id": "test-session",
+  "cwd": "/tmp/aapp",
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Write",
+  "tool_input": {
+    "file_path": "tmp.txt",
+    "content": "hello"
+  },
+  "tool_response": {
+    "success": true,
+    "secret": "github_pat_secretsecretsecret"
+  }
+}
