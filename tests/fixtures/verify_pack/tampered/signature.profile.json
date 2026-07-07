@@ -1,0 +1,5 @@
+{
+  "public_key_ref": "ed25519_public.pem",
+  "schema_version": "aapp.signature_profile.v1",
+  "signature_alg": "Ed25519"
+}
