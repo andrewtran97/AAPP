@@ -1,0 +1,13 @@
+{
+  "affected_evidence_refs": [
+    "evidence.package.zip"
+  ],
+  "reason_codes": [
+    "manifest_digest_mismatch"
+  ],
+  "risk_class": "HIGH",
+  "schema_version": "aapp.verify_pack.verdict.v1",
+  "source_type": "verify",
+  "timestamp": "2026-01-01T00:00:00Z",
+  "verdict": "FAILED"
+}

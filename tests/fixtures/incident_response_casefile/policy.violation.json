@@ -1,0 +1,13 @@
+{
+  "affected_policy_refs": [
+    "policy_change.proposal.json"
+  ],
+  "reason_codes": [
+    "policy_downgrade_without_high_trust_approval"
+  ],
+  "risk_class": "HIGH",
+  "schema_version": "aapp.policy_change_verdict.v1",
+  "source_type": "policy_change",
+  "timestamp": "2026-01-01T00:00:00Z",
+  "verdict": "POLICY_DOWNGRADE"
+}
