@@ -1,0 +1,23 @@
+{
+  "approvals": [
+    {
+      "approval_digest": "sha256:7a60810e291f8241e8cc4f7ac4192a9b35651cbd4c6fa9bb423ef40338e84961",
+      "approved_at": "2026-01-01T00:10:00Z",
+      "approver_id": "approver-001",
+      "approver_role": "security_lead",
+      "change_id": "policy-change-001",
+      "decision": "APPROVED",
+      "schema_version": "aapp.policy_change_approval.v1"
+    },
+    {
+      "approval_digest": "sha256:2f1926db66edda6572cda44f547cdfe74788df14a67fdc2572b940b5c412709d",
+      "approved_at": "2026-01-01T00:10:00Z",
+      "approver_id": "approver-002",
+      "approver_role": "platform_owner",
+      "change_id": "policy-change-001",
+      "decision": "APPROVED",
+      "schema_version": "aapp.policy_change_approval.v1"
+    }
+  ],
+  "schema_version": "aapp.policy_change_approvals.v1"
+}

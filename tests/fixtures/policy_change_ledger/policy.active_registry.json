@@ -1,0 +1,9 @@
+{
+  "active_policies": {
+    "default-agent-policy": {
+      "policy_digest": "sha256:266fc4320103b6ddfa1c84ab7085d187713bcfc191edd1ce6cbdfaa6ed7f1472",
+      "policy_version": "v1"
+    }
+  },
+  "schema_version": "aapp.policy_active_registry.v1"
+}
