@@ -1,0 +1,133 @@
+name: Agent Black Box Scan
+description: Run Agent Black Box surface scan, posture scan, and optional verify pack in CI.
+
+inputs:
+  repo-path:
+    description: Repository path to scan.
+    required: false
+    default: "."
+  out-dir:
+    description: Output directory for scan artifacts.
+    required: false
+    default: ".aapp/agent-black-box-scan"
+  fail-on-high:
+    description: Fail when surface or posture HIGH findings are detected.
+    required: false
+    default: "false"
+  verify-package-path:
+    description: Optional evidence package directory to verify.
+    required: false
+    default: ""
+
+outputs:
+  out-dir:
+    description: Directory containing Agent Black Box outputs.
+    value: ${{ steps.paths.outputs.out-dir }}
+  surface-high-findings:
+    description: Number of surface HIGH findings.
+    value: ${{ steps.summary.outputs.surface-high-findings }}
+  posture-high-findings:
+    description: Number of posture HIGH findings.
+    value: ${{ steps.summary.outputs.posture-high-findings }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: paths
+      shell: bash
+      run: |
+        set -euo pipefail
+        mkdir -p "${{ inputs.out-dir }}"
+        echo "out-dir=${{ inputs.out-dir }}" >> "$GITHUB_OUTPUT"
+
+    - name: Run surface scan
+      shell: bash
+      run: |
+        set -euo pipefail
+        python3 -m aapp.surface_scan \
+          --repo "${{ inputs.repo-path }}" \
+          --out "${{ inputs.out-dir }}/surface"
+
+    - name: Run posture scan
+      shell: bash
+      run: |
+        set -euo pipefail
+        python3 -m aapp.posture_scan \
+          --repo "${{ inputs.repo-path }}" \
+          --out "${{ inputs.out-dir }}/posture"
+
+    - name: Optional verify pack
+      shell: bash
+      run: |
+        set -euo pipefail
+        if [ -n "${{ inputs.verify-package-path }}" ]; then
+          python3 -m aapp.verify_pack \
+            --package "${{ inputs.verify-package-path }}" \
+            --out "${{ inputs.out-dir }}/verify"
+        else
+          mkdir -p "${{ inputs.out-dir }}/verify"
+          printf '%s\n' '{"schema_version":"aapp.verify_pack.v1","verdict":"UNSUPPORTED","reason":"verify_package_path_not_provided"}' \
+            > "${{ inputs.out-dir }}/verify/verify.verdict.json"
+          printf '%s\n' '# Verify Pack' '' 'No verify package path provided.' \
+            > "${{ inputs.out-dir }}/verify/verify.report.md"
+        fi
+
+    - id: summary
+      name: Summarize findings
+      shell: bash
+      run: |
+        set -euo pipefail
+        python3 - <<'PY'
+        import json
+        import os
+        from pathlib import Path
+
+        out = Path(os.environ["AAPP_OUT_DIR"])
+        surface_metrics = json.loads((out / "surface" / "surface.metrics.json").read_text())
+        posture_map = json.loads((out / "posture" / "posture.map.json").read_text())
+
+        surface_high = int(surface_metrics.get("high_findings", 0))
+        posture_high = int(posture_map.get("summary", {}).get("high_findings", 0))
+
+        gh_output = Path(os.environ["GITHUB_OUTPUT"])
+        with gh_output.open("a", encoding="utf-8") as f:
+            f.write(f"surface-high-findings={surface_high}\n")
+            f.write(f"posture-high-findings={posture_high}\n")
+
+        summary = {
+            "schema_version": "aapp.github_action_scan.v1",
+            "surface_high_findings": surface_high,
+            "posture_high_findings": posture_high,
+            "out_dir": str(out),
+        }
+        (out / "action.summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
+        PY
+      env:
+        AAPP_OUT_DIR: ${{ inputs.out-dir }}
+
+    - name: Enforce fail-on-high
+      shell: bash
+      run: |
+        set -euo pipefail
+        python3 - <<'PY'
+        import json
+        import os
+        from pathlib import Path
+
+        out = Path(os.environ["AAPP_OUT_DIR"])
+        fail_on_high = os.environ["AAPP_FAIL_ON_HIGH"].lower() == "true"
+
+        summary = json.loads((out / "action.summary.json").read_text())
+        total_high = int(summary["surface_high_findings"]) + int(summary["posture_high_findings"])
+
+        print(f"Agent Black Box outputs: {out}")
+        print(f"surface_high_findings={summary['surface_high_findings']}")
+        print(f"posture_high_findings={summary['posture_high_findings']}")
+        print(f"fail_on_high={fail_on_high}")
+
+        if fail_on_high and total_high > 0:
+            raise SystemExit(f"Agent Black Box HIGH findings detected: {total_high}")
+        PY
+      env:
+        AAPP_OUT_DIR: ${{ inputs.out-dir }}
+        AAPP_FAIL_ON_HIGH: ${{ inputs.fail-on-high }}

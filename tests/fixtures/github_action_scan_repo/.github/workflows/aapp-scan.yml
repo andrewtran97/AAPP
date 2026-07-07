@@ -1,0 +1,24 @@
+name: Agent Black Box Scan Example
+
+on: [pull_request]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  agent-black-box:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Agent Black Box scan
+        uses: ./.github/actions/agent-black-box-scan
+        with:
+          repo-path: "."
+          out-dir: ".aapp/agent-black-box-scan"
+          fail-on-high: "false"
+      - name: Upload Agent Black Box artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-black-box-scan
+          path: .aapp/agent-black-box-scan
