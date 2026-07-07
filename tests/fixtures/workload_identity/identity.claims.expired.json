@@ -1,0 +1,21 @@
+{
+  "allowed_actions": [
+    "ALLOW",
+    "DENY"
+  ],
+  "allowed_policy_ids": [
+    "default-agent-policy"
+  ],
+  "artifact_id": "repo-andrewtran97-AAPP",
+  "controller_id": "github-actions-ci-basic",
+  "identity_digest": "sha256:017009cfae3f93a28f94fe8562fe764ba686f093308bf09948175e9ab7ff01a3",
+  "identity_id": "identity-001",
+  "issuer": "dev-spiffe-mock",
+  "not_after": "2020-01-01T00:00:00Z",
+  "not_before": "2026-01-01T00:00:00Z",
+  "schema_version": "aapp.workload_identity_claims.v1",
+  "subject": "spiffe://example.org/aapp/github-actions/ci-basic",
+  "svid_type": "x509-svid",
+  "trust_domain": "example.org",
+  "workload_id": "github-actions:ci-basic"
+}

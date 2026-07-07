@@ -1,0 +1,15 @@
+{
+  "active_identities": {
+    "github-actions:ci-basic": {
+      "identity_digest": "sha256:6b87698cbfe2a84283a108b4027ae4220d089aea77819de5fb87f4594c71f563",
+      "identity_id": "identity-001",
+      "status": "ACTIVE",
+      "subject": "spiffe://example.org/aapp/github-actions/ci-basic",
+      "trust_domain": "example.org"
+    }
+  },
+  "schema_version": "aapp.workload_identity_registry.v1",
+  "trust_domains": [
+    "example.org"
+  ]
+}
