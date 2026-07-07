@@ -1,8 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: Security vulnerability report
-    url: https://github.com/andrewtran97/AAPP/security
-    about: Do not disclose vulnerabilities in public issues. Use the security policy and private reporting path.
-  - name: AAPP v1.1 release assets
-    url: https://github.com/andrewtran97/AAPP/releases/tag/aapp-baseline-v1.1
-    about: Download public demo and external review packet.
+    url: https://github.com/andrewtran97/AAPP/security/advisories/new
+    about: Report vulnerabilities privately when available.

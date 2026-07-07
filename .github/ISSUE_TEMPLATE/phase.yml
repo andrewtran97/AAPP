@@ -1,0 +1,109 @@
+name: Phase
+description: Propose or track an Agent Black Box phase
+title: "Bxx: "
+labels: ["phase"]
+body:
+  - type: input
+    id: phase_id
+    attributes:
+      label: Phase Name & ID
+      placeholder: "B27C - Developer Distribution Gate"
+    validations:
+      required: true
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective / Goal
+      description: Business and technical goal in 1-2 clear sentences.
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Why this phase is necessary and what failure mode it prevents.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Include In Scope, Out of Scope / Non-Goals, and Future Considerations.
+    validations:
+      required: true
+
+  - type: textarea
+    id: metrics
+    attributes:
+      label: Metrics
+      description: Completion, quality/safety, adoption/usability, and performance/scale metrics or why not applicable.
+    validations:
+      required: true
+
+  - type: textarea
+    id: deliverables
+    attributes:
+      label: Deliverables
+      description: Required files, code artifacts, documentation, and machine-readable outputs.
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies & Prerequisites
+    validations:
+      required: true
+
+  - type: textarea
+    id: decisions
+    attributes:
+      label: Key Design Decisions
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation Strategy
+    validations:
+      required: true
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks & Mitigations
+    validations:
+      required: true
+
+  - type: textarea
+    id: kill_conditions
+    attributes:
+      label: Kill Conditions
+    validations:
+      required: true
+
+  - type: textarea
+    id: success
+    attributes:
+      label: Success Criteria
+    validations:
+      required: true
+
+  - type: textarea
+    id: transition
+    attributes:
+      label: Transition to Next Phase
+    validations:
+      required: true
+
+  - type: input
+    id: owner
+    attributes:
+      label: Timeline & Owner
+      placeholder: "Optional"
+    validations:
+      required: false
