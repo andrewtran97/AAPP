@@ -1,0 +1,6 @@
+{
+  "artifact_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "artifact_id": "repo-andrewtran97-AAPP",
+  "git_commit": "deadbeef",
+  "schema_version": "aapp.artifact.v1"
+}

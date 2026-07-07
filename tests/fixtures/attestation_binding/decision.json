@@ -1,0 +1,5 @@
+{
+  "policy_decision": "DENY",
+  "reason_code": "destructive_operation_blocked",
+  "schema_version": "aapp.decision.v1"
+}

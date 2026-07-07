@@ -1,0 +1,7 @@
+{
+  "policy_id": "default-agent-policy",
+  "policy_signature_ref": "dev-policy-signature",
+  "policy_version": "v1",
+  "rules_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "schema_version": "aapp.policy.v1"
+}

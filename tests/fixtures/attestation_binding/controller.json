@@ -1,0 +1,5 @@
+{
+  "controller_config_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "controller_id": "github-actions-ci-basic",
+  "schema_version": "aapp.controller.v1"
+}
