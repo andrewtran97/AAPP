@@ -1,0 +1,14 @@
+{
+  "files": {
+    "reports/session.report.md": "sha256:1f2ec36455ac4b6693e90679b06f4390b7e140da87fcb1ebbfe409a4b8d8a2ed",
+    "signature.profile.json": "sha256:6b6691ab9b8637856f54611ff5c1fc1154c355f0612a4572cd0c96aeecae85c6",
+    "traces/hook.trace.jsonl": "sha256:a861676142f21554d1ade6a650942af80d6d966779b1b8f02388f22c505ea998"
+  },
+  "hash_alg": "sha256",
+  "required_files": [
+    "traces/hook.trace.jsonl",
+    "signature.profile.json",
+    "reports/session.report.md"
+  ],
+  "schema_version": "aapp.verify_pack.v1"
+}
