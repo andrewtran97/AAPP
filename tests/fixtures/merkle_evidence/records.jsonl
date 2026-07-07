@@ -1,0 +1,5 @@
+{"record_id":"record-000001","session_id":"s1","seq":1,"source":"firewall","tool_name":"read_status","policy_decision":"ALLOW","execution_status":"executed","arguments_digest":"sha256:a1","prev_record_hash":null}
+{"record_id":"record-000002","session_id":"s1","seq":2,"source":"firewall","tool_name":"delete_database","policy_decision":"DENY","execution_status":"denied","arguments_digest":"sha256:a2","prev_record_hash":"sha256:prev1"}
+{"record_id":"record-000003","session_id":"s1","seq":3,"source":"state_ledger","tool_name":"deploy_code","policy_decision":"ALLOW","execution_status":"executed","arguments_digest":"sha256:a3","prev_record_hash":"sha256:prev2"}
+{"record_id":"record-000004","session_id":"s1","seq":4,"source":"verify_pack","tool_name":"verify_package","policy_decision":"ALLOW","execution_status":"executed","arguments_digest":"sha256:a4","prev_record_hash":"sha256:prev3"}
+{"record_id":"record-000005","session_id":"s1","seq":5,"source":"network_active_scan","tool_name":"tcp_connect","policy_decision":"ALLOW","execution_status":"executed","arguments_digest":"sha256:a5","prev_record_hash":"sha256:prev4"}
