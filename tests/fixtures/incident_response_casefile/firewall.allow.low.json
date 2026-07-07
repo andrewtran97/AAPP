@@ -1,0 +1,10 @@
+{
+  "decision": "ALLOW",
+  "reason_codes": [
+    "low_risk_read_allowed"
+  ],
+  "risk_class": "LOW",
+  "schema_version": "aapp.firewall.verdict.v1",
+  "source_type": "firewall",
+  "timestamp": "2026-01-01T00:00:00Z"
+}

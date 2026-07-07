@@ -1,0 +1,13 @@
+{
+  "affected_evidence_refs": [
+    "governance.verdict.json"
+  ],
+  "reason_codes": [
+    "private_key_present"
+  ],
+  "risk_class": "CRITICAL",
+  "schema_version": "aapp.evidence_governance_verdict.v1",
+  "source_type": "governance",
+  "timestamp": "2026-01-01T00:00:00Z",
+  "verdict": "UNSAFE"
+}
