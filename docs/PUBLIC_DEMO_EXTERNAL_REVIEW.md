@@ -73,8 +73,8 @@ Do not claim:
 - post-quantum security
 - Qubes-certified
 - government-grade
-- military-grade
-- compliance guaranteed
+- does not claim military-grade
+- compliance is not guaranteed
 - AI safety solved
 - live MCP secured
 - live MCP integration

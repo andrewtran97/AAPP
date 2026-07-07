@@ -256,9 +256,9 @@ Do not claim:
 - post-quantum secure
 - Qubes-certified
 - government-grade
-- military-grade
+- does not claim military-grade
 - unbreakable
-- compliance guaranteed
+- compliance is not guaranteed
 - AI safety solved
 
 Allowed wording:
