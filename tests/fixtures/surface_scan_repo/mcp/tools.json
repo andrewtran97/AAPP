@@ -1,0 +1,13 @@
+{
+  "tools": [
+    {
+      "name": "scope_monitor",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "target": {"type": "string"}
+        }
+      }
+    }
+  ]
+}
