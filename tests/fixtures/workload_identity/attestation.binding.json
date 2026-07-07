@@ -1,0 +1,21 @@
+{
+  "artifact": {
+    "artifact_id": "repo-andrewtran97-AAPP"
+  },
+  "binding_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "controller": {
+    "controller_id": "github-actions-ci-basic"
+  },
+  "decision": {
+    "policy_decision": "DENY",
+    "reason_code": "destructive_operation_blocked"
+  },
+  "policy": {
+    "policy_id": "default-agent-policy",
+    "policy_version": "v1"
+  },
+  "runtime": {
+    "runtime_id": "ubuntu-24.04-python"
+  },
+  "schema_version": "aapp.attestation_binding.v1"
+}
