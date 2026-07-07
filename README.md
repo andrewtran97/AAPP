@@ -1,220 +1,228 @@
-# AAPP — Flight Recorder for AI Agent Tool Actions
+# AAPP — Agent Black Box
 
-AAPP is a local reference implementation for tamper-evident AI agent action provenance.
+[![ci](https://github.com/andrewtran97/AAPP/actions/workflows/ci.yml/badge.svg)](https://github.com/andrewtran97/AAPP/actions/workflows/ci.yml)
 
-It creates a verifiable action trail for agent/tool workflows:
+Agent Black Box is a flight recorder for AI agent tool actions.
 
-```text
-scope → tool request → policy decision → approval state → trace → replay → evidence bundle
-```
+It records hook events, MCP tool calls, Git/CI evidence, and produces a tamper-evident session bundle so a reviewer can see what was requested, what policy decided, what evidence was produced, and whether the evidence changed later.
 
-Normal logs tell you something happened.
-
-AAPP tries to prove what the agent was allowed to do, what tool it requested, what policy decided, and whether the evidence was changed later.
-
-## Why now
+## Why it exists
 
 AI agents are moving from chat into tool use.
 
-MCP makes tool access portable. Agents can connect to files, databases, tools, workflows, and external systems.
-
-That creates a new trust boundary:
+The trust boundary is no longer just "what did the model say?" The new boundary is:
 
 ```text
-Can the agent use this tool?
-Was the action in scope?
-Was the decision allow, deny, or approval-required?
-Can we verify the evidence after the fact?
-Can a reviewer replay the action timeline?
-```
+What was the agent allowed to do?
+What tool did it request?
+Was the request allowed, denied, or routed to approval?
+Did denied action execution stop?
+Was the denied attempt still recorded?
+Can the evidence bundle be verified later?
+Can tampering be detected?
+Agent Black Box is built for that boundary.
 
-AAPP is built for that boundary.
+What it is
 
-## The difference
+Agent Black Box is a local reference implementation for agent-action evidence.
 
-AAPP is not observability.
+Core evidence path:
 
-AAPP is not a scanner.
+scope
+→ tool request
+→ policy decision
+→ trace
+→ evidence bundle
+→ manifest
+→ report
+→ signature / verification
+What it is not
 
-AAPP is not a SIEM.
+Agent Black Box is not:
 
-AAPP is not a pentest bot.
+an IDE replacement
+a scanner
+a SIEM
+a pentest bot
+a dashboard product
+a compliance certification system
+a full agent containment guarantee
+a post-quantum security claim
+Current status
+Area	Status
+Local hook capture	Available
+MCP proxy recorder	Available
+Git/CI evidence adapter	Available
+Unified session bundle	Available
+GitHub Action verifier	Available
+VS Code/Cursor evidence panel	Reference adapter
+Product E2E run	Available
+Offline evidence package	Available
+Evidence package QA	Complete
+Independent validation	Pending
+Security certification	Not claimed
+Quick start
 
-AAPP is provenance for the agent-action boundary.
+Requirements:
 
-```text
-OpenTelemetry helps observe systems.
-Sigstore/Rekor helps prove software supply-chain events.
-AAPP focuses on AI agent tool actions.
-```
+Python 3.10+
+Git
+OpenSSL for Ed25519 signing workflows
 
-## What it proves today
+Run the core test suite:
 
-AAPP v1.1 can show:
+git clone https://github.com/andrewtran97/AAPP.git
+cd AAPP
+python3 -m unittest discover -s tests -v
 
-- a scoped action trail
-- tool request records
-- policy decisions: `allow`, `deny`, `require_human_approval`
-- hash-linked JSONL traces
-- dev-only HMAC-SHA384 signatures
-- strict verification
-- replay reports
-- evidence bundles
-- secret-like value redaction
-- denied tool attempts that remain visible without executing
-- local MCP-style tool boundary evidence
+Run the end-to-end product flow:
 
-## Current baseline
+bash scripts/run_agent_black_box_e2e.sh
 
-Current public baseline:
+Expected result:
 
-- `aapp-baseline-v1.1`
-- public demo bundle
-- external review packet
-- local MCP-style boundary research
-- GitHub Actions boundary review
-- self-security advisory drill
+Agent Black Box E2E product run: PASS
+What the E2E run verifies
+
+The product run executes the full evidence chain:
+
+Hook gateway capture.
+MCP proxy recording.
+Git/CI evidence capture.
+Unified session bundle creation.
+GitHub Action-style verifier command.
+Tamper rejection.
+
+Expected outputs:
+
+.aapp/evidence/agent-black-box-e2e/
+  sources/
+    hook/session.trace.jsonl
+    mcp/mcp.trace.jsonl
+    git-ci/gitci.trace.jsonl
+  session-bundle/
+    AGENT-BLACK-BOX-BUNDLE/
+      manifest.json
+      hook.trace.jsonl
+      mcp.trace.jsonl
+      gitci.trace.jsonl
+      hashes.txt
+      verification_result.md
+      session.report.md
+  github-action-style-report.md
+  PRODUCT_RUN_SUMMARY.txt
+Evidence package
+
+A session bundle contains:
+
+AGENT-BLACK-BOX-BUNDLE/
+  manifest.json
+  hook.trace.jsonl
+  mcp.trace.jsonl
+  gitci.trace.jsonl
+  hashes.txt
+  verification_result.md
+  session.report.md
+
+The bundle is designed to make local agent/tool activity easier to verify, replay, and review without storing raw secrets in the report.
+
+Signing
+
+Agent Black Box currently supports two signing layers:
+
+Layer	Purpose
+Dev HMAC-SHA384	Internal tamper-evident trace and bundle verification
+Detached Ed25519 pilot signing	Review/pilot signing for the bundle manifest
+
+Detached Ed25519 signing creates:
+
+manifest.ed25519.sig
+signature.profile.json
+ed25519_public.pem
+
+The private key is not copied into the evidence bundle.
+
+Offline review package
+
+For install-blocked environments, use the offline evidence package from the prerelease:
+
+agent-black-box-v0.2.0-rc.20260706163212
 
 Release:
 
-https://github.com/andrewtran97/AAPP/releases/tag/aapp-baseline-v1.1
+https://github.com/andrewtran97/AAPP/releases/tag/agent-black-box-v0.2.0-rc.20260706163212
 
-## 3-minute challenge
+Offline review should start with:
 
-Try to tamper with the evidence.
+README-OFFLINE-REVIEW.txt
+PRODUCT_RUN_SUMMARY.txt
+session-bundle/AGENT-BLACK-BOX-BUNDLE/session.report.md
+session-bundle/AGENT-BLACK-BOX-BUNDLE/verification_result.md
+session-bundle/AGENT-BLACK-BOX-BUNDLE/signature.profile.json
+github-action-style-report.md
+GitHub Action verifier
 
-```bash
-git clone https://github.com/andrewtran97/AAPP.git
-cd AAPP
+The repository includes a composite GitHub Action verifier:
 
-python3 -m unittest discover -s tests -v
+.github/actions/agent-black-box-verify/action.yml
 
-bash scripts/build_a1_mcp_boundary_research.sh evidence/a1-mcp-boundary
+It runs the session bundle verifier and report command against a provided bundle.
 
-python3 -m aapp.cli verify \
-  evidence/a1-mcp-boundary/recorded/trace.jsonl \
-  --key-file evidence/a1-mcp-boundary/recorded/dev.key
-```
+Use cases
 
-Now modify one line in:
+Agent Black Box is useful for:
 
-```text
-evidence/a1-mcp-boundary/recorded/trace.jsonl
-```
-
-Run verify again.
-
-If verification still passes after tampering, open an issue.
-
-## What the demo produces
-
-```text
-evidence/a1-mcp-boundary/
-  recorded/
-    trace.jsonl
-    dev.key
-    mcp-results.json
-    verification_result.md
-  replay_report.md
-  AAPP-EVIDENCE-BUNDLE/
-    scope.json
-    trace.jsonl
-    evidence.bundle.json
-    evidence.report.md
-    hashes.txt
-    verification_result.md
-```
-
-## Evidence bundle
-
-An AAPP evidence bundle contains:
-
-```text
-AAPP-EVIDENCE-BUNDLE/
-  scope.json
-  trace.jsonl
-  evidence.bundle.json
-  evidence.report.md
-  hashes.txt
-  verification_result.md
-```
-
-The bundle is designed to make local agent/tool activity easier to verify, replay, and review.
-
-## What AAPP is not
-
-AAPP does not claim:
-
-- production security certification
-- post-quantum security
-- Qubes certification
-- government affiliation
-- compliance guarantee
-- live MCP security
-- production signing infrastructure
-
-The current signing mode is dev-only.
-
-## Security boundary
+local agent/tool evidence review
+MCP-style tool boundary review
+CI evidence capture
+tamper-evident session bundle review
+denied-action audit trails
+pilot review of AI agent workflow provenance
+Security boundary
 
 Authorized research only.
 
-Do not use AAPP for:
+Do not use this project for:
 
-- live target testing without written scope
-- exploit weaponization
-- credential theft
-- persistence
-- evasion
-- phishing
-- storing raw secrets in evidence bundles
+live target testing without written scope
+exploit weaponization
+credential theft
+persistence
+evasion
+phishing
+storing raw secrets in evidence bundles
 
-Security issues should not be reported in public issues. See `SECURITY.md`.
+Security issues should not be reported in public issues. See SECURITY.md.
 
-## Reviewer entry point
+Roadmap
 
-Start here:
+Near-term:
 
-- Release v1.1: https://github.com/andrewtran97/AAPP/releases/tag/aapp-baseline-v1.1
-- Public launch issue: https://github.com/andrewtran97/AAPP/issues/25
-- External review request: https://github.com/andrewtran97/AAPP/issues
-- Security policy: `SECURITY.md`
-- MCP boundary research: `docs/MCP_BOUNDARY_RESEARCH.md`
-- GitHub Actions boundary review: `docs/GITHUB_ACTIONS_BOUNDARY_REVIEW.md`
+B12 documentation and demo clarity.
+Offline evidence package navigation.
+Reviewer-friendly evidence map.
+Packaging only if install friction remains a blocker.
 
-Useful review questions:
+Not planned right now:
 
-```text
-1. Could you understand what AAPP does in 3 minutes?
-2. Is the evidence bundle understandable?
-3. Is this meaningfully different from a normal audit log?
-4. What blocks pilot use?
-5. What claim should be removed or softened?
-```
+dashboard expansion
+scanner features
+compliance certification claims
+Rust/Go rewrite before schema freeze
+VSIX/npm publication before packaging is justified
+Contributing
 
-## Governance
+See CONTRIBUTING.md.
 
-Main branch changes are gated by:
+Contribution priority:
 
-- pull request requirement
-- signed commits
-- required `basic` CI check
-- squash merge
-- force-push block
-- deletion restriction
-- linear history
+Clear evidence semantics.
+Small patches.
+Deterministic tests.
+No raw secrets.
+No unsupported security or compliance claims.
+License
 
-## Project status
+See LICENSE.
 
-AAPP is an early reference implementation.
-
-It is useful for:
-
-- protocol review
-- local demos
-- agent/tool evidence review
-- MCP-style boundary research
-- replayable evidence bundle review
-- external technical feedback
-
-It is not ready for production signing, regulated compliance use, or high-assurance security claims.
+If no LICENSE file is present, usage rights are not granted beyond normal repository viewing. Add an explicit license before presenting this as an open-source package.
