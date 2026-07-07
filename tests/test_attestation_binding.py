@@ -221,6 +221,35 @@ def test_private_key_or_secret_is_unsafe(tmp_path):
     assert verdict["unsafe_findings"]
 
 
+
+def test_tampered_single_temp_file_is_invalid_not_unsafe(tmp_path):
+    out, _ = build_valid(tmp_path)
+
+    noisy_tmp = tmp_path / "noisy"
+    noisy_tmp.mkdir()
+    marker = "-----BEGIN " + "RSA " + "PRIVATE " + "KEY-----"
+    (noisy_tmp / "leftover.pem").write_text(marker + "\nnot-real\n", encoding="utf-8")
+
+    tampered = tmp_path / "tampered-evidence.json"
+    data = json.loads((FIXTURE / "evidence.json").read_text())
+    data["records_digest"] = "sha256:" + ("9" * 64)
+    tampered.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n")
+
+    verdict = verify_from_files(
+        out / "attestation.binding.json",
+        tampered,
+        FIXTURE / "artifact.json",
+        FIXTURE / "controller.json",
+        FIXTURE / "runtime.json",
+        FIXTURE / "policy.json",
+        FIXTURE / "active_policy_registry.json",
+        tmp_path / "verify-tampered",
+    )
+
+    assert verdict["verdict"] == INVALID
+    assert verdict["reason"] == "evidence_digest_mismatch"
+
+
 def test_machine_readable_verdict(tmp_path):
     out, result = build_valid(tmp_path)
     verdict = json.loads((out / "attestation.verdict.json").read_text())

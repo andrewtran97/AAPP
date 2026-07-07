@@ -91,25 +91,40 @@ def unsafe_findings(paths: list[Path]) -> list[dict[str, Any]]:
 def component_scan_roots(paths: list[Path]) -> list[Path]:
     roots: list[Path] = []
     seen: set[str] = set()
+    parent_counts: dict[str, int] = {}
 
+    normalized: list[Path] = []
     for raw in paths:
         path = Path(raw)
-        candidates = [path]
-
+        normalized.append(path)
         if path.is_file():
-            candidates.append(path.parent)
-        elif not path.exists():
-            candidates.append(path.parent)
+            parent_key = str(path.parent.resolve())
+            parent_counts[parent_key] = parent_counts.get(parent_key, 0) + 1
 
-        for candidate in candidates:
+    def add(candidate: Path) -> None:
+        try:
             key = str(candidate.resolve() if candidate.exists() else candidate.absolute())
-            if key in seen:
-                continue
+        except OSError:
+            key = str(candidate.absolute())
+        if key not in seen:
             seen.add(key)
             roots.append(candidate)
 
-    return roots
+    for path in normalized:
+        add(path)
 
+    # Only scan a parent directory when it is clearly a component package
+    # containing multiple provided component files. Do not scan broad parents
+    # such as /tmp because a single tampered temp file lives there.
+    for path in normalized:
+        if not path.is_file():
+            continue
+        parent = path.parent
+        parent_key = str(parent.resolve())
+        if parent_counts.get(parent_key, 0) >= 2:
+            add(parent)
+
+    return roots
 
 def require_dict(name: str, obj: Any) -> dict[str, Any]:
     if not isinstance(obj, dict):
