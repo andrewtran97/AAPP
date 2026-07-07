@@ -1,0 +1,14 @@
+{
+  "data_classification": "internal",
+  "evidence_id": "evidence-internal-001",
+  "export_requested": false,
+  "jurisdiction": "US",
+  "payload": {
+    "owner_email": "security@example.test",
+    "workflow": "ci/basic"
+  },
+  "retention_days": 90,
+  "schema_version": "aapp.evidence_data.v1",
+  "sharing_scope": "internal",
+  "storage_requested": true
+}
