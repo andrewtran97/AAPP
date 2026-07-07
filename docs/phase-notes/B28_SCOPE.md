@@ -1,4 +1,4 @@
-# B28 Threat Detection Signals + Policy Abstraction
+# B28 — Policy Abstraction + Deterministic Risk Signals
 
 ## Product gate
 
