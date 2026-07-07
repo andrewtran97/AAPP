@@ -1,0 +1,16 @@
+{
+  "schema_version": "aapp.network_scope.v1",
+  "scope_id": "out-of-scope-test",
+  "authorized_by": "local-test",
+  "created_at": "2026-01-01T00:00:00Z",
+  "expires_at": "2099-01-01T00:00:00Z",
+  "allowed_targets": ["127.0.0.1"],
+  "allowed_ports": [1],
+  "allowed_methods": ["tcp_connect"],
+  "rate_limit": {
+    "max_attempts": 10,
+    "min_interval_ms": 0
+  },
+  "purpose": "local test only",
+  "no_exploit": true
+}

@@ -1,0 +1,6 @@
+{
+  "target": "127.0.0.1",
+  "port": 1,
+  "method": "tcp_connect",
+  "timeout_s": 1.0
+}
