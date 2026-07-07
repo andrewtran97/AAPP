@@ -8,7 +8,7 @@ Required location:
 
 This standard exists to prevent scope drift, missing files, stale roadmap language, unsupported claims, and phase handoff ambiguity.
 
-## Required Sections
+## Required Template
 
 Every phase manifest must include:
 
@@ -28,7 +28,7 @@ Every phase manifest must include:
 14. Timeline & Owner
 15. Final Phase Record
 
-## Repository Rules
+## Global Rules
 
 - No Phase Manifest -> No branch.
 - No Required Files section -> No implementation.
@@ -45,3 +45,13 @@ Every phase manifest must include:
 This backfill is docs-only for B0-B27.
 
 It does not modify runtime code, tests, README, CI workflows, issue metadata, release assets, packaging, or any post-B27 phase.
+
+
+## 13. Transition to Next Phase
+
+Describe the criteria, artifacts, validation state, and handoff conditions required before the next phase can start.
+
+
+## 14. Timeline & Owner
+
+State the owner and expected execution window when useful. For solo execution, use: Owner: human executor. Timeline: single product-gate PR.

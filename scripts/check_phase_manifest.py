@@ -72,7 +72,7 @@ FULL_MANIFEST_SECTIONS = [
     "## 14. Timeline & Owner",
 ]
 
-STALE_B28_PHRASE = "B28 Threat Detection Signals"
+STALE_B28_PHRASE = "B28 " + "Threat Detection Signals"
 
 def fail(message: str) -> int:
     print(f"FAIL: {message}")
@@ -140,6 +140,8 @@ def check_stale_b28_title() -> list[str]:
 
         for path in paths:
             if "__pycache__" in path.parts:
+                continue
+            if path.name == "check_phase_manifest.py":
                 continue
 
             text = read(path)
