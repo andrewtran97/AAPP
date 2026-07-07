@@ -1,38 +1,38 @@
-# B27 - Incident Response Casefile
+# B1 - Hook Gateway
 
 ## 1. Phase Name & ID
 
-**Phase ID:** B27
-**Phase Name:** Incident Response Casefile
-**Phase Type:** incident / governance
+**Phase ID:** B1
+**Phase Name:** Hook Gateway
+**Phase Type:** implementation
 **Status:** backfilled from merged historical phase
-**Primary PR:** #69
-**Primary Issue:** #68
+**Primary PR:** #29
+**Primary Issue:** Historical
 
 ---
 
 ## 2. Objective / Goal
 
-Convert failure states into structured incident casefiles.
+Introduce the first local agent-action control boundary.
 
 Business goal:
-- Give maintainers a repeatable failure record with severity, affected refs, containment recommendation, owner, timeline, and closure receipt.
+- Give reviewers a concrete first proof point for allowed and denied agent actions.
 
 Technical goal:
-- Create incident casefile generator, timeline JSONL, closure receipt, machine-readable verdict, and report.
+- Record local hook events, apply policy-before-execution, and verify trace integrity.
 
 ---
 
 ## 3. Problem Statement
 
 This phase exists because:
-- Failure verdicts need structured follow-up.
-- Closures need approval evidence.
-- Failures are scattered across module outputs.
+- Agent tool use needs a first control boundary.
+- Denied actions must be recorded without executing.
+- Tampering with local traces must be detectable.
 
 Without this phase:
-- Failures remain loose notes.
-- Closure may happen without approval receipt.
+- There is no first evidence point.
+- Dangerous actions may be blocked informally without a record.
 
 ---
 
@@ -40,26 +40,24 @@ Without this phase:
 
 ### In Scope
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Local hook gateway.
+- Tool boundary event recording.
+- Policy-before-execution deny path.
+- Dev HMAC-SHA384 trace verification.
+- Tamper and redaction tests.
 
 ### Out of Scope / Non-Goals
 
-- No SIEM integration.
-- No automation response system.
-- No cloud containment.
-- No auto rollback.
-- No human notification service.
-- No post-B27 implementation.
+- No end-to-end containment claim.
+- No cloud policy backend.
+- No SIEM.
+- No external target testing.
 
 ### Future Considerations
 
-- Separate scoped post-B27 work can use incident verdicts as input.
+- MCP-style recorder.
+- Git/CI evidence adapter.
+- Unified session bundle.
 
 ---
 
@@ -103,16 +101,16 @@ Without this phase:
 ### Required Files
 
 Production files:
-- `aapp/incident_response_casefile.py`
+- `aapp/agent_blackbox_hook.py`
 
 Test files:
-- `tests/test_incident_response_casefile.py`
+- `tests/test_agent_blackbox_hook.py`
 
 Fixture files:
-- `tests/fixtures/incident_response_casefile/*`
+- No unique fixture file or directory for this phase.
 
 Documentation:
-- `docs/phase-notes/B27_SCOPE.md`
+- `docs/phase-notes/B1_SCOPE.md`
 
 Scripts / Workflows:
 - No unique script or workflow for this phase.
@@ -122,21 +120,15 @@ Examples:
 
 ### Required Output Artifacts
 
-- `incident.casefile.json`
-- `incident.timeline.jsonl`
-- `incident.closure.receipt.json`
-- `incident.verdict.json`
-- `incident.report.md`
+- `session.trace.jsonl`
 
 ### Code Artifacts
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Local hook gateway.
+- Tool boundary event recording.
+- Policy-before-execution deny path.
+- Dev HMAC-SHA384 trace verification.
+- Tamper and redaction tests.
 
 ### Documentation Artifacts
 
@@ -149,17 +141,12 @@ Examples:
 
 ### Required Previous Phases
 
-- B17 - Deterministic MCP Firewall
-- B19 - Verify Pack
-- B21 - Scoped Network Active Scan
-- B23 - Attestation Binding
-- B24 - Workload Identity Binding
-- B25 - Policy Change Ledger
-- B26 - Evidence Data Governance
+- B0 product boundary
 
 ### Required Tools / Libraries
 
 - Python 3.10+
+- Git
 
 ### Required Design Decisions
 
@@ -172,16 +159,16 @@ Examples:
 
 ## 8. Key Design Decisions
 
-### Decision 1: Casefile only
+### Decision 1: Policy before execution
 
 Chosen:
-- Open structured casefiles.
+- Evaluate before running the action.
 
 Rejected:
-- Automate containment.
+- Execute first and explain later.
 
 Reason:
-- This phase records failure and closure evidence only.
+- Denied actions must not create side effects.
 
 Trade-off:
 - More explicit control and review burden, lower scope and claim risk.
@@ -192,8 +179,8 @@ Trade-off:
 
 ### Automated Tests
 
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m unittest tests.test_agent_blackbox_hook -v
+- python3 -m unittest discover -s tests -v
 
 ### Manual Checklist
 
@@ -205,12 +192,8 @@ Trade-off:
 
 ### Scenario Tests
 
-- Firewall DENY -> CASE_OPENED.
-- Verify FAILED -> CASE_OPENED.
-- Governance UNSAFE -> CASE_OPENED.
-- Low-risk ALLOW -> CASE_NOT_REQUIRED.
-- Closure without approval -> CLOSURE_REJECTED.
-- Closure with approval -> CASE_CLOSED.
+- Denied destructive command -> denied and recorded.
+- Modified trace -> verification failure.
 
 ### Validation Script
 
@@ -236,8 +219,8 @@ Main branch:
 
 | Risk | Impact | Mitigation |
 |---|---:|---|
-| Scope drift into automation response | High | Non-goals forbid it. |
-| Closure without approval | High | Approval fixture required. |
+| Hook bypass | High | Document as reference boundary. |
+| Secret leakage | High | Redact secret-like values. |
 
 ---
 
@@ -252,7 +235,6 @@ Abort or rollback this phase if:
 - Any phase claims certification, absolute containment, absolute tamper resistance, or absolute bypass resistance.
 - Any phase invents required files that do not exist or are not intentionally created by the scoped phase.
 - Any phase after B27 is edited, generated, or implemented.
-- Any post-B27 implementation file appears in this docs-only backfill.
 
 ---
 
@@ -260,11 +242,12 @@ Abort or rollback this phase if:
 
 When this phase is complete, we will have:
 
-- Failure states become structured incident records.
+- First local hook boundary exists.
+- Denied action has a record.
 
 Qualitative outcome:
 
-- Maintainer can close failure with a receipt, not a loose note.
+- Reviewer understands the first agent-action boundary.
 
 ---
 
@@ -280,12 +263,10 @@ This phase may transition to the next phase only when:
 - Post-merge validation passes on `main`.
 
 Next phase:
-- Post-B27 work requires a separate scope.
+- B2 - Local Hook Install / Session Capture
 
 The next phase depends on:
-- incident.verdict.json
-- incident.casefile.json
-- B27 boundary
+- Hook trace behavior
 
 ---
 
@@ -309,20 +290,20 @@ Target timeline:
 ## 15. Final Phase Record
 
 Built in this phase:
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Local hook gateway.
+- Tool boundary event recording.
+- Policy-before-execution deny path.
+- Dev HMAC-SHA384 trace verification.
+- Tamper and redaction tests.
 
 Deferred, not removed:
-- Separate scoped post-B27 work can use incident verdicts as input.
+- MCP-style recorder.
+- Git/CI evidence adapter.
+- Unified session bundle.
 
 Final validation:
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m unittest tests.test_agent_blackbox_hook -v
+- python3 -m unittest discover -s tests -v
 
 Final status:
 - backfilled from merged historical phase

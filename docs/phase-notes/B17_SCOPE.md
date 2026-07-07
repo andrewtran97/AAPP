@@ -1,38 +1,37 @@
-# B27 - Incident Response Casefile
+# B17 - Deterministic MCP Firewall
 
 ## 1. Phase Name & ID
 
-**Phase ID:** B27
-**Phase Name:** Incident Response Casefile
-**Phase Type:** incident / governance
+**Phase ID:** B17
+**Phase Name:** Deterministic MCP Firewall
+**Phase Type:** policy / implementation
 **Status:** backfilled from merged historical phase
-**Primary PR:** #69
-**Primary Issue:** #68
+**Primary PR:** #48
+**Primary Issue:** #47
 
 ---
 
 ## 2. Objective / Goal
 
-Convert failure states into structured incident casefiles.
+Enforce deterministic policy for MCP-style tool calls.
 
 Business goal:
-- Give maintainers a repeatable failure record with severity, affected refs, containment recommendation, owner, timeline, and closure receipt.
+- Block unsafe actions before execution and record the decision trail.
 
 Technical goal:
-- Create incident casefile generator, timeline JSONL, closure receipt, machine-readable verdict, and report.
+- Route tool calls through ALLOW, DENY, or REQUIRE_APPROVAL with trace and report outputs.
 
 ---
 
 ## 3. Problem Statement
 
 This phase exists because:
-- Failure verdicts need structured follow-up.
-- Closures need approval evidence.
-- Failures are scattered across module outputs.
+- Tool calls need deterministic enforcement.
+- Probabilistic allow/deny is not acceptable for control routing.
 
 Without this phase:
-- Failures remain loose notes.
-- Closure may happen without approval receipt.
+- Tool calls execute without stable policy.
+- Denied attempts may not be recorded.
 
 ---
 
@@ -40,26 +39,23 @@ Without this phase:
 
 ### In Scope
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- ALLOW fake executor path.
+- DENY no execution.
+- DENY records trace.
+- REQUIRE_APPROVAL no execution without approval.
+- Invalid/unknown default DENY.
+- CLI trace/verdict/report.
 
 ### Out of Scope / Non-Goals
 
-- No SIEM integration.
-- No automation response system.
-- No cloud containment.
-- No auto rollback.
-- No human notification service.
-- No post-B27 implementation.
+- No ML policy decision.
+- No external policy backend.
+- No real destructive execution.
 
 ### Future Considerations
 
-- Separate scoped post-B27 work can use incident verdicts as input.
+- State ledger and reversal.
+- Policy abstraction after B27.
 
 ---
 
@@ -103,16 +99,18 @@ Without this phase:
 ### Required Files
 
 Production files:
-- `aapp/incident_response_casefile.py`
+- `aapp/deterministic_firewall.py`
 
 Test files:
-- `tests/test_incident_response_casefile.py`
+- `tests/test_deterministic_firewall.py`
 
 Fixture files:
-- `tests/fixtures/incident_response_casefile/*`
+- `tests/fixtures/firewall_policy.json`
+- `tests/fixtures/firewall_allowed_tools_call.json`
+- `tests/fixtures/firewall_blocked_tools_call.json`
 
 Documentation:
-- `docs/phase-notes/B27_SCOPE.md`
+- `docs/phase-notes/B17_SCOPE.md`
 
 Scripts / Workflows:
 - No unique script or workflow for this phase.
@@ -122,21 +120,18 @@ Examples:
 
 ### Required Output Artifacts
 
-- `incident.casefile.json`
-- `incident.timeline.jsonl`
-- `incident.closure.receipt.json`
-- `incident.verdict.json`
-- `incident.report.md`
+- `firewall.trace.jsonl`
+- `firewall.verdict.json`
+- `firewall.report.md`
 
 ### Code Artifacts
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- ALLOW fake executor path.
+- DENY no execution.
+- DENY records trace.
+- REQUIRE_APPROVAL no execution without approval.
+- Invalid/unknown default DENY.
+- CLI trace/verdict/report.
 
 ### Documentation Artifacts
 
@@ -149,13 +144,8 @@ Examples:
 
 ### Required Previous Phases
 
-- B17 - Deterministic MCP Firewall
-- B19 - Verify Pack
-- B21 - Scoped Network Active Scan
-- B23 - Attestation Binding
-- B24 - Workload Identity Binding
-- B25 - Policy Change Ledger
-- B26 - Evidence Data Governance
+- B15 - Surface Scan
+- B16 - Posture Scan
 
 ### Required Tools / Libraries
 
@@ -172,16 +162,16 @@ Examples:
 
 ## 8. Key Design Decisions
 
-### Decision 1: Casefile only
+### Decision 1: Deterministic decision
 
 Chosen:
-- Open structured casefiles.
+- Rule-based ALLOW/DENY/REQUIRE_APPROVAL.
 
 Rejected:
-- Automate containment.
+- Probabilistic decision.
 
 Reason:
-- This phase records failure and closure evidence only.
+- Policy decisions must be reproducible.
 
 Trade-off:
 - More explicit control and review burden, lower scope and claim risk.
@@ -192,8 +182,8 @@ Trade-off:
 
 ### Automated Tests
 
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m py_compile aapp/deterministic_firewall.py tests/test_deterministic_firewall.py
+- python3 -m pytest tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
 
 ### Manual Checklist
 
@@ -205,12 +195,9 @@ Trade-off:
 
 ### Scenario Tests
 
-- Firewall DENY -> CASE_OPENED.
-- Verify FAILED -> CASE_OPENED.
-- Governance UNSAFE -> CASE_OPENED.
-- Low-risk ALLOW -> CASE_NOT_REQUIRED.
-- Closure without approval -> CLOSURE_REJECTED.
-- Closure with approval -> CASE_CLOSED.
+- Allowed request -> safe path.
+- Blocked request -> no execution.
+- Unknown tool -> DENY.
 
 ### Validation Script
 
@@ -236,8 +223,8 @@ Main branch:
 
 | Risk | Impact | Mitigation |
 |---|---:|---|
-| Scope drift into automation response | High | Non-goals forbid it. |
-| Closure without approval | High | Approval fixture required. |
+| Policy bypass | High | Deny by default. |
+| Overbroad policy | Medium | Separate abstraction later. |
 
 ---
 
@@ -252,7 +239,6 @@ Abort or rollback this phase if:
 - Any phase claims certification, absolute containment, absolute tamper resistance, or absolute bypass resistance.
 - Any phase invents required files that do not exist or are not intentionally created by the scoped phase.
 - Any phase after B27 is edited, generated, or implemented.
-- Any post-B27 implementation file appears in this docs-only backfill.
 
 ---
 
@@ -260,11 +246,11 @@ Abort or rollback this phase if:
 
 When this phase is complete, we will have:
 
-- Failure states become structured incident records.
+- Tool calls have a deterministic gate.
 
 Qualitative outcome:
 
-- Maintainer can close failure with a receipt, not a loose note.
+- Reviewer can explain allow/deny outcome.
 
 ---
 
@@ -280,12 +266,10 @@ This phase may transition to the next phase only when:
 - Post-merge validation passes on `main`.
 
 Next phase:
-- Post-B27 work requires a separate scope.
+- B18 - State Ledger + Reversal Plan
 
 The next phase depends on:
-- incident.verdict.json
-- incident.casefile.json
-- B27 boundary
+- firewall.verdict.json
 
 ---
 
@@ -309,20 +293,20 @@ Target timeline:
 ## 15. Final Phase Record
 
 Built in this phase:
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- ALLOW fake executor path.
+- DENY no execution.
+- DENY records trace.
+- REQUIRE_APPROVAL no execution without approval.
+- Invalid/unknown default DENY.
+- CLI trace/verdict/report.
 
 Deferred, not removed:
-- Separate scoped post-B27 work can use incident verdicts as input.
+- State ledger and reversal.
+- Policy abstraction after B27.
 
 Final validation:
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m py_compile aapp/deterministic_firewall.py tests/test_deterministic_firewall.py
+- python3 -m pytest tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
 
 Final status:
 - backfilled from merged historical phase

@@ -1,38 +1,39 @@
-# B27 - Incident Response Casefile
+# B0 - Repository Constitution / Product Boundary Gate
 
 ## 1. Phase Name & ID
 
-**Phase ID:** B27
-**Phase Name:** Incident Response Casefile
-**Phase Type:** incident / governance
-**Status:** backfilled from merged historical phase
-**Primary PR:** #69
-**Primary Issue:** #68
+**Phase ID:** B0
+**Phase Name:** Repository Constitution / Product Boundary Gate
+**Phase Type:** governance
+**Status:** backfilled constitution record
+**Primary PR:** Backfill branch
+**Primary Issue:** None
 
 ---
 
 ## 2. Objective / Goal
 
-Convert failure states into structured incident casefiles.
+Define the product boundary, language boundary, and repository operating rules before implementation phases.
 
 Business goal:
-- Give maintainers a repeatable failure record with severity, affected refs, containment recommendation, owner, timeline, and closure receipt.
+- Make AAPP understandable as a controlled technology system, not a loose collection of scripts.
 
 Technical goal:
-- Create incident casefile generator, timeline JSONL, closure receipt, machine-readable verdict, and report.
+- Create the canonical boundary for Agent Black Box as an AI Agent Control + Evidence Plane.
 
 ---
 
 ## 3. Problem Statement
 
 This phase exists because:
-- Failure verdicts need structured follow-up.
-- Closures need approval evidence.
-- Failures are scattered across module outputs.
+- The repository needs one system definition before phase records can be trusted.
+- Without B0, README, PRs, issues, and phase notes can drift into different product categories.
+- Unsupported security or certification language creates trust and legal risk.
 
 Without this phase:
-- Failures remain loose notes.
-- Closure may happen without approval receipt.
+- Future phases can use inconsistent names and claims.
+- Reviewers cannot distinguish product boundary from future ambition.
+- Scope creep becomes normal instead of exceptional.
 
 ---
 
@@ -40,26 +41,25 @@ Without this phase:
 
 ### In Scope
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Define Agent Black Box as AI Agent Control + Evidence Plane.
+- Define claim boundaries and forbidden product categories.
+- Define phase manifest discipline for B1-B27 backfill.
+- Define repository language rules for future phases.
 
 ### Out of Scope / Non-Goals
 
-- No SIEM integration.
-- No automation response system.
-- No cloud containment.
-- No auto rollback.
-- No human notification service.
-- No post-B27 implementation.
+- No runtime code.
+- No tests.
+- No README update.
+- No CI workflow change.
+- No issue metadata change.
+- No implementation after B27.
 
 ### Future Considerations
 
-- Separate scoped post-B27 work can use incident verdicts as input.
+- Repo enforcement checks can be added in a separate scoped branch.
+- README and architecture surface can be refreshed in a separate scoped branch.
+- Post-B27 implementation remains out of scope for this backfill.
 
 ---
 
@@ -103,16 +103,17 @@ Without this phase:
 ### Required Files
 
 Production files:
-- `aapp/incident_response_casefile.py`
+- No unique production source file for this phase.
 
 Test files:
-- `tests/test_incident_response_casefile.py`
+- No unique tracked test file for this phase.
 
 Fixture files:
-- `tests/fixtures/incident_response_casefile/*`
+- No unique fixture file or directory for this phase.
 
 Documentation:
-- `docs/phase-notes/B27_SCOPE.md`
+- `docs/PHASE_MANIFEST_STANDARD.md`
+- `docs/phase-notes/B0_SCOPE.md`
 
 Scripts / Workflows:
 - No unique script or workflow for this phase.
@@ -122,21 +123,14 @@ Examples:
 
 ### Required Output Artifacts
 
-- `incident.casefile.json`
-- `incident.timeline.jsonl`
-- `incident.closure.receipt.json`
-- `incident.verdict.json`
-- `incident.report.md`
+- `B0 repository boundary record`
 
 ### Code Artifacts
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Define Agent Black Box as AI Agent Control + Evidence Plane.
+- Define claim boundaries and forbidden product categories.
+- Define phase manifest discipline for B1-B27 backfill.
+- Define repository language rules for future phases.
 
 ### Documentation Artifacts
 
@@ -149,17 +143,12 @@ Examples:
 
 ### Required Previous Phases
 
-- B17 - Deterministic MCP Firewall
-- B19 - Verify Pack
-- B21 - Scoped Network Active Scan
-- B23 - Attestation Binding
-- B24 - Workload Identity Binding
-- B25 - Policy Change Ledger
-- B26 - Evidence Data Governance
+- Clean repository state
 
 ### Required Tools / Libraries
 
-- Python 3.10+
+- Git
+- Markdown
 
 ### Required Design Decisions
 
@@ -172,16 +161,30 @@ Examples:
 
 ## 8. Key Design Decisions
 
-### Decision 1: Casefile only
+### Decision 1: System category
 
 Chosen:
-- Open structured casefiles.
+- Use AI Agent Control + Evidence Plane.
 
 Rejected:
-- Automate containment.
+- Use generic security platform language.
 
 Reason:
-- This phase records failure and closure evidence only.
+- The system controls agent actions and records evidence; it is not a SIEM, SOAR, IDS, or certification system.
+
+Trade-off:
+- More explicit control and review burden, lower scope and claim risk.
+
+### Decision 2: Docs-only backfill
+
+Chosen:
+- Write tracked phase manifests only.
+
+Rejected:
+- Modify code or CI in the same branch.
+
+Reason:
+- This keeps the branch reviewable and avoids mixing governance with runtime changes.
 
 Trade-off:
 - More explicit control and review burden, lower scope and claim risk.
@@ -192,8 +195,9 @@ Trade-off:
 
 ### Automated Tests
 
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- Validate B0-B27 docs exist.
+- Validate no files outside the docs allowlist changed.
+- Run `git diff --check`.
 
 ### Manual Checklist
 
@@ -205,12 +209,8 @@ Trade-off:
 
 ### Scenario Tests
 
-- Firewall DENY -> CASE_OPENED.
-- Verify FAILED -> CASE_OPENED.
-- Governance UNSAFE -> CASE_OPENED.
-- Low-risk ALLOW -> CASE_NOT_REQUIRED.
-- Closure without approval -> CLOSURE_REJECTED.
-- Closure with approval -> CASE_CLOSED.
+- Cold reviewer opens B0 and understands what AAPP is and is not.
+- Maintainer can reject unsupported claim language using B0.
 
 ### Validation Script
 
@@ -236,8 +236,8 @@ Main branch:
 
 | Risk | Impact | Mitigation |
 |---|---:|---|
-| Scope drift into automation response | High | Non-goals forbid it. |
-| Closure without approval | High | Approval fixture required. |
+| Constitution becomes marketing copy | High | Use claim boundaries and non-goals. |
+| Backfill edits runtime files | High | Use allowlist validation. |
 
 ---
 
@@ -252,7 +252,6 @@ Abort or rollback this phase if:
 - Any phase claims certification, absolute containment, absolute tamper resistance, or absolute bypass resistance.
 - Any phase invents required files that do not exist or are not intentionally created by the scoped phase.
 - Any phase after B27 is edited, generated, or implemented.
-- Any post-B27 implementation file appears in this docs-only backfill.
 
 ---
 
@@ -260,11 +259,14 @@ Abort or rollback this phase if:
 
 When this phase is complete, we will have:
 
-- Failure states become structured incident records.
+- AAPP has a root product boundary.
+- B1-B27 phase docs have a common standard.
+- Future phases have a contract format.
 
 Qualitative outcome:
 
-- Maintainer can close failure with a receipt, not a loose note.
+- Reviewer understands the system category in two minutes.
+- Maintainer has language to reject scope creep.
 
 ---
 
@@ -280,12 +282,11 @@ This phase may transition to the next phase only when:
 - Post-merge validation passes on `main`.
 
 Next phase:
-- Post-B27 work requires a separate scope.
+- B1 - Hook Gateway
 
 The next phase depends on:
-- incident.verdict.json
-- incident.casefile.json
-- B27 boundary
+- B0 product boundary
+- B0 claim boundary
 
 ---
 
@@ -309,20 +310,20 @@ Target timeline:
 ## 15. Final Phase Record
 
 Built in this phase:
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Define Agent Black Box as AI Agent Control + Evidence Plane.
+- Define claim boundaries and forbidden product categories.
+- Define phase manifest discipline for B1-B27 backfill.
+- Define repository language rules for future phases.
 
 Deferred, not removed:
-- Separate scoped post-B27 work can use incident verdicts as input.
+- Repo enforcement checks can be added in a separate scoped branch.
+- README and architecture surface can be refreshed in a separate scoped branch.
+- Post-B27 implementation remains out of scope for this backfill.
 
 Final validation:
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- Validate B0-B27 docs exist.
+- Validate no files outside the docs allowlist changed.
+- Run `git diff --check`.
 
 Final status:
-- backfilled from merged historical phase
+- backfilled constitution record

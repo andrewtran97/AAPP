@@ -1,38 +1,37 @@
-# B27 - Incident Response Casefile
+# B6 - GitHub Action Verifier
 
 ## 1. Phase Name & ID
 
-**Phase ID:** B27
-**Phase Name:** Incident Response Casefile
-**Phase Type:** incident / governance
+**Phase ID:** B6
+**Phase Name:** GitHub Action Verifier
+**Phase Type:** workflow adapter
 **Status:** backfilled from merged historical phase
-**Primary PR:** #69
-**Primary Issue:** #68
+**Primary PR:** #33
+**Primary Issue:** Historical
 
 ---
 
 ## 2. Objective / Goal
 
-Convert failure states into structured incident casefiles.
+Allow CI to verify an Agent Black Box evidence bundle.
 
 Business goal:
-- Give maintainers a repeatable failure record with severity, affected refs, containment recommendation, owner, timeline, and closure receipt.
+- Make evidence verification visible in pull-request workflows.
 
 Technical goal:
-- Create incident casefile generator, timeline JSONL, closure receipt, machine-readable verdict, and report.
+- Provide a composite GitHub Action verifier for unified bundles.
 
 ---
 
 ## 3. Problem Statement
 
 This phase exists because:
-- Failure verdicts need structured follow-up.
-- Closures need approval evidence.
-- Failures are scattered across module outputs.
+- Manual verification does not fit CI.
+- Tampered bundle needs automated failure signal.
 
 Without this phase:
-- Failures remain loose notes.
-- Closure may happen without approval receipt.
+- Bundle verification stays local only.
+- CI cannot prove evidence validity.
 
 ---
 
@@ -40,26 +39,21 @@ Without this phase:
 
 ### In Scope
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Composite verifier action.
+- Bundle verify command.
+- Tamper failure path.
 
 ### Out of Scope / Non-Goals
 
-- No SIEM integration.
-- No automation response system.
-- No cloud containment.
-- No auto rollback.
-- No human notification service.
-- No post-B27 implementation.
+- No scan action.
+- No artifact upload action.
+- No marketplace publication.
 
 ### Future Considerations
 
-- Separate scoped post-B27 work can use incident verdicts as input.
+- IDE panel.
+- E2E run.
+- Scan action later.
 
 ---
 
@@ -103,40 +97,32 @@ Without this phase:
 ### Required Files
 
 Production files:
-- `aapp/incident_response_casefile.py`
+- No unique production source file for this phase.
 
 Test files:
-- `tests/test_incident_response_casefile.py`
+- `tests/test_github_action_verifier.py`
 
 Fixture files:
-- `tests/fixtures/incident_response_casefile/*`
+- No unique fixture file or directory for this phase.
 
 Documentation:
-- `docs/phase-notes/B27_SCOPE.md`
+- `docs/phase-notes/B6_SCOPE.md`
 
 Scripts / Workflows:
-- No unique script or workflow for this phase.
+- `.github/actions/agent-black-box-verify/action.yml`
 
 Examples:
 - No unique example artifact for this phase.
 
 ### Required Output Artifacts
 
-- `incident.casefile.json`
-- `incident.timeline.jsonl`
-- `incident.closure.receipt.json`
-- `incident.verdict.json`
-- `incident.report.md`
+- `GitHub Action verification result`
 
 ### Code Artifacts
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Composite verifier action.
+- Bundle verify command.
+- Tamper failure path.
 
 ### Documentation Artifacts
 
@@ -149,16 +135,11 @@ Examples:
 
 ### Required Previous Phases
 
-- B17 - Deterministic MCP Firewall
-- B19 - Verify Pack
-- B21 - Scoped Network Active Scan
-- B23 - Attestation Binding
-- B24 - Workload Identity Binding
-- B25 - Policy Change Ledger
-- B26 - Evidence Data Governance
+- B5 - Unified Session Bundle
 
 ### Required Tools / Libraries
 
+- GitHub Actions
 - Python 3.10+
 
 ### Required Design Decisions
@@ -172,16 +153,16 @@ Examples:
 
 ## 8. Key Design Decisions
 
-### Decision 1: Casefile only
+### Decision 1: Composite action first
 
 Chosen:
-- Open structured casefiles.
+- Use local composite action.
 
 Rejected:
-- Automate containment.
+- Publish marketplace action immediately.
 
 Reason:
-- This phase records failure and closure evidence only.
+- Keep interface reviewable before distribution.
 
 Trade-off:
 - More explicit control and review burden, lower scope and claim risk.
@@ -192,8 +173,8 @@ Trade-off:
 
 ### Automated Tests
 
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m unittest tests.test_github_action_verifier -v
+- python3 -m unittest discover -s tests -v
 
 ### Manual Checklist
 
@@ -205,12 +186,8 @@ Trade-off:
 
 ### Scenario Tests
 
-- Firewall DENY -> CASE_OPENED.
-- Verify FAILED -> CASE_OPENED.
-- Governance UNSAFE -> CASE_OPENED.
-- Low-risk ALLOW -> CASE_NOT_REQUIRED.
-- Closure without approval -> CLOSURE_REJECTED.
-- Closure with approval -> CASE_CLOSED.
+- Valid bundle -> action succeeds.
+- Tampered bundle -> action fails.
 
 ### Validation Script
 
@@ -236,8 +213,8 @@ Main branch:
 
 | Risk | Impact | Mitigation |
 |---|---:|---|
-| Scope drift into automation response | High | Non-goals forbid it. |
-| Closure without approval | High | Approval fixture required. |
+| False pass | High | Tamper tests. |
+| Packaging drift | Medium | Keep local until stable. |
 
 ---
 
@@ -252,7 +229,6 @@ Abort or rollback this phase if:
 - Any phase claims certification, absolute containment, absolute tamper resistance, or absolute bypass resistance.
 - Any phase invents required files that do not exist or are not intentionally created by the scoped phase.
 - Any phase after B27 is edited, generated, or implemented.
-- Any post-B27 implementation file appears in this docs-only backfill.
 
 ---
 
@@ -260,11 +236,11 @@ Abort or rollback this phase if:
 
 When this phase is complete, we will have:
 
-- Failure states become structured incident records.
+- CI can verify bundles.
 
 Qualitative outcome:
 
-- Maintainer can close failure with a receipt, not a loose note.
+- Reviewer can see evidence verification as an automated check.
 
 ---
 
@@ -280,12 +256,10 @@ This phase may transition to the next phase only when:
 - Post-merge validation passes on `main`.
 
 Next phase:
-- Post-B27 work requires a separate scope.
+- B7 - VS Code / Cursor Evidence Panel
 
 The next phase depends on:
-- incident.verdict.json
-- incident.casefile.json
-- B27 boundary
+- Bundle verifier action
 
 ---
 
@@ -309,20 +283,18 @@ Target timeline:
 ## 15. Final Phase Record
 
 Built in this phase:
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Composite verifier action.
+- Bundle verify command.
+- Tamper failure path.
 
 Deferred, not removed:
-- Separate scoped post-B27 work can use incident verdicts as input.
+- IDE panel.
+- E2E run.
+- Scan action later.
 
 Final validation:
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m unittest tests.test_github_action_verifier -v
+- python3 -m unittest discover -s tests -v
 
 Final status:
 - backfilled from merged historical phase

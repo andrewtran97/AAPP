@@ -1,38 +1,39 @@
-# B27 - Incident Response Casefile
+# B12 - README / CONTRIBUTING Brand Surface
 
 ## 1. Phase Name & ID
 
-**Phase ID:** B27
-**Phase Name:** Incident Response Casefile
-**Phase Type:** incident / governance
+**Phase ID:** B12
+**Phase Name:** README / CONTRIBUTING Brand Surface
+**Phase Type:** documentation
 **Status:** backfilled from merged historical phase
-**Primary PR:** #69
-**Primary Issue:** #68
+**Primary PR:** #40
+**Primary Issue:** Historical
 
 ---
 
 ## 2. Objective / Goal
 
-Convert failure states into structured incident casefiles.
+Make the public repository understandable and safe to contribute to.
 
 Business goal:
-- Give maintainers a repeatable failure record with severity, affected refs, containment recommendation, owner, timeline, and closure receipt.
+- Improve first-impression clarity while preserving claim boundaries.
 
 Technical goal:
-- Create incident casefile generator, timeline JSONL, closure receipt, machine-readable verdict, and report.
+- Update README positioning, quickstart, contribution rules, and status language.
 
 ---
 
 ## 3. Problem Statement
 
 This phase exists because:
-- Failure verdicts need structured follow-up.
-- Closures need approval evidence.
-- Failures are scattered across module outputs.
+- Public repo needs clear framing.
+- Contributors need boundaries.
+- Unsupported claims create trust risk.
 
 Without this phase:
-- Failures remain loose notes.
-- Closure may happen without approval receipt.
+- Reviewers misunderstand the project.
+- PRs mix unrelated changes.
+- Claim drift persists.
 
 ---
 
@@ -40,26 +41,24 @@ Without this phase:
 
 ### In Scope
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- README product surface.
+- CONTRIBUTING rules.
+- Quickstart.
+- Evidence path explanation.
+- Claim boundary language.
 
 ### Out of Scope / Non-Goals
 
-- No SIEM integration.
-- No automation response system.
-- No cloud containment.
-- No auto rollback.
-- No human notification service.
-- No post-B27 implementation.
+- No protocol change.
+- No runtime change.
+- No dashboard.
+- No scanner expansion.
 
 ### Future Considerations
 
-- Separate scoped post-B27 work can use incident verdicts as input.
+- License.
+- Release hygiene audit.
+- Later README refresh in a separate scoped branch.
 
 ---
 
@@ -103,16 +102,18 @@ Without this phase:
 ### Required Files
 
 Production files:
-- `aapp/incident_response_casefile.py`
+- No unique production source file for this phase.
 
 Test files:
-- `tests/test_incident_response_casefile.py`
+- No unique tracked test file for this phase.
 
 Fixture files:
-- `tests/fixtures/incident_response_casefile/*`
+- No unique fixture file or directory for this phase.
 
 Documentation:
-- `docs/phase-notes/B27_SCOPE.md`
+- `README.md`
+- `CONTRIBUTING.md`
+- `docs/phase-notes/B12_SCOPE.md`
 
 Scripts / Workflows:
 - No unique script or workflow for this phase.
@@ -122,21 +123,16 @@ Examples:
 
 ### Required Output Artifacts
 
-- `incident.casefile.json`
-- `incident.timeline.jsonl`
-- `incident.closure.receipt.json`
-- `incident.verdict.json`
-- `incident.report.md`
+- `README status sections`
+- `CONTRIBUTING rules`
 
 ### Code Artifacts
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- README product surface.
+- CONTRIBUTING rules.
+- Quickstart.
+- Evidence path explanation.
+- Claim boundary language.
 
 ### Documentation Artifacts
 
@@ -149,17 +145,11 @@ Examples:
 
 ### Required Previous Phases
 
-- B17 - Deterministic MCP Firewall
-- B19 - Verify Pack
-- B21 - Scoped Network Active Scan
-- B23 - Attestation Binding
-- B24 - Workload Identity Binding
-- B25 - Policy Change Ledger
-- B26 - Evidence Data Governance
+- B11 - Offline Review / Evidence Package QA
 
 ### Required Tools / Libraries
 
-- Python 3.10+
+- Markdown
 
 ### Required Design Decisions
 
@@ -172,16 +162,16 @@ Examples:
 
 ## 8. Key Design Decisions
 
-### Decision 1: Casefile only
+### Decision 1: Bounded public language
 
 Chosen:
-- Open structured casefiles.
+- Use precise status language.
 
 Rejected:
-- Automate containment.
+- Use broad security platform language.
 
 Reason:
-- This phase records failure and closure evidence only.
+- Credibility depends on accurate claims.
 
 Trade-off:
 - More explicit control and review burden, lower scope and claim risk.
@@ -192,8 +182,8 @@ Trade-off:
 
 ### Automated Tests
 
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m unittest discover -s tests -v
+- bash scripts/run_agent_black_box_e2e.sh
 
 ### Manual Checklist
 
@@ -205,12 +195,8 @@ Trade-off:
 
 ### Scenario Tests
 
-- Firewall DENY -> CASE_OPENED.
-- Verify FAILED -> CASE_OPENED.
-- Governance UNSAFE -> CASE_OPENED.
-- Low-risk ALLOW -> CASE_NOT_REQUIRED.
-- Closure without approval -> CLOSURE_REJECTED.
-- Closure with approval -> CASE_CLOSED.
+- Cold reviewer -> can run quickstart.
+- Contributor -> sees small-patch rule.
 
 ### Validation Script
 
@@ -236,8 +222,8 @@ Main branch:
 
 | Risk | Impact | Mitigation |
 |---|---:|---|
-| Scope drift into automation response | High | Non-goals forbid it. |
-| Closure without approval | High | Approval fixture required. |
+| README stale | Medium | Refresh in separate scoped branch. |
+| Contributor scope drift | High | Use contribution rules and future templates. |
 
 ---
 
@@ -252,7 +238,6 @@ Abort or rollback this phase if:
 - Any phase claims certification, absolute containment, absolute tamper resistance, or absolute bypass resistance.
 - Any phase invents required files that do not exist or are not intentionally created by the scoped phase.
 - Any phase after B27 is edited, generated, or implemented.
-- Any post-B27 implementation file appears in this docs-only backfill.
 
 ---
 
@@ -260,11 +245,11 @@ Abort or rollback this phase if:
 
 When this phase is complete, we will have:
 
-- Failure states become structured incident records.
+- Public repo has clearer product/contribution surface.
 
 Qualitative outcome:
 
-- Maintainer can close failure with a receipt, not a loose note.
+- New reviewer understands available vs pending.
 
 ---
 
@@ -280,12 +265,10 @@ This phase may transition to the next phase only when:
 - Post-merge validation passes on `main`.
 
 Next phase:
-- Post-B27 work requires a separate scope.
+- B13 - Apache-2.0 License
 
 The next phase depends on:
-- incident.verdict.json
-- incident.casefile.json
-- B27 boundary
+- Public status language
 
 ---
 
@@ -309,20 +292,20 @@ Target timeline:
 ## 15. Final Phase Record
 
 Built in this phase:
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- README product surface.
+- CONTRIBUTING rules.
+- Quickstart.
+- Evidence path explanation.
+- Claim boundary language.
 
 Deferred, not removed:
-- Separate scoped post-B27 work can use incident verdicts as input.
+- License.
+- Release hygiene audit.
+- Later README refresh in a separate scoped branch.
 
 Final validation:
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m unittest discover -s tests -v
+- bash scripts/run_agent_black_box_e2e.sh
 
 Final status:
 - backfilled from merged historical phase

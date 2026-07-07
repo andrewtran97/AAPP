@@ -1,38 +1,36 @@
-# B27 - Incident Response Casefile
+# B22 - Merkle Evidence Transparency Receipt
 
 ## 1. Phase Name & ID
 
-**Phase ID:** B27
-**Phase Name:** Incident Response Casefile
-**Phase Type:** incident / governance
+**Phase ID:** B22
+**Phase Name:** Merkle Evidence Transparency Receipt
+**Phase Type:** transparency / implementation
 **Status:** backfilled from merged historical phase
-**Primary PR:** #69
-**Primary Issue:** #68
+**Primary PR:** #58
+**Primary Issue:** #57
 
 ---
 
 ## 2. Objective / Goal
 
-Convert failure states into structured incident casefiles.
+Create tamper-evident transparency receipts for evidence records.
 
 Business goal:
-- Give maintainers a repeatable failure record with severity, affected refs, containment recommendation, owner, timeline, and closure receipt.
+- Give reviewers inclusion and consistency proof material.
 
 Technical goal:
-- Create incident casefile generator, timeline JSONL, closure receipt, machine-readable verdict, and report.
+- Build Merkle tree outputs, signed tree head, inclusion proofs, consistency proofs, and verification verdict.
 
 ---
 
 ## 3. Problem Statement
 
 This phase exists because:
-- Failure verdicts need structured follow-up.
-- Closures need approval evidence.
-- Failures are scattered across module outputs.
+- Flat records need stronger tamper evidence.
+- Reviewer needs proof a record belongs to an evidence epoch.
 
 Without this phase:
-- Failures remain loose notes.
-- Closure may happen without approval receipt.
+- Records can be swapped or removed without epoch-level proof.
 
 ---
 
@@ -40,26 +38,24 @@ Without this phase:
 
 ### In Scope
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Canonical record hashing.
+- Tree verification.
+- Inclusion proof verification.
+- Consistency proof verification.
+- Tampered record failure.
+- Unsafe private key detection.
 
 ### Out of Scope / Non-Goals
 
-- No SIEM integration.
-- No automation response system.
-- No cloud containment.
-- No auto rollback.
-- No human notification service.
-- No post-B27 implementation.
+- No blockchain.
+- No public transparency service.
+- No zero-knowledge proof.
+- No remote witness.
 
 ### Future Considerations
 
-- Separate scoped post-B27 work can use incident verdicts as input.
+- Attestation binding.
+- External witness after B27.
 
 ---
 
@@ -103,16 +99,16 @@ Without this phase:
 ### Required Files
 
 Production files:
-- `aapp/incident_response_casefile.py`
+- `aapp/merkle_evidence.py`
 
 Test files:
-- `tests/test_incident_response_casefile.py`
+- `tests/test_merkle_evidence.py`
 
 Fixture files:
-- `tests/fixtures/incident_response_casefile/*`
+- `tests/fixtures/merkle_evidence/records.jsonl`
 
 Documentation:
-- `docs/phase-notes/B27_SCOPE.md`
+- `docs/phase-notes/B22_SCOPE.md`
 
 Scripts / Workflows:
 - No unique script or workflow for this phase.
@@ -122,21 +118,23 @@ Examples:
 
 ### Required Output Artifacts
 
-- `incident.casefile.json`
-- `incident.timeline.jsonl`
-- `incident.closure.receipt.json`
-- `incident.verdict.json`
-- `incident.report.md`
+- `manifest.json`
+- `signed_tree_head.json`
+- `records.jsonl`
+- `leaves.jsonl`
+- `inclusion/proof-record-*.json`
+- `consistency/proof-from-*.json`
+- `merkle.verdict.json`
+- `merkle.report.md`
 
 ### Code Artifacts
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Canonical record hashing.
+- Tree verification.
+- Inclusion proof verification.
+- Consistency proof verification.
+- Tampered record failure.
+- Unsafe private key detection.
 
 ### Documentation Artifacts
 
@@ -149,13 +147,8 @@ Examples:
 
 ### Required Previous Phases
 
-- B17 - Deterministic MCP Firewall
 - B19 - Verify Pack
 - B21 - Scoped Network Active Scan
-- B23 - Attestation Binding
-- B24 - Workload Identity Binding
-- B25 - Policy Change Ledger
-- B26 - Evidence Data Governance
 
 ### Required Tools / Libraries
 
@@ -172,16 +165,16 @@ Examples:
 
 ## 8. Key Design Decisions
 
-### Decision 1: Casefile only
+### Decision 1: Local transparency receipt
 
 Chosen:
-- Open structured casefiles.
+- Build local Merkle receipt.
 
 Rejected:
-- Automate containment.
+- Use public chain/service.
 
 Reason:
-- This phase records failure and closure evidence only.
+- Local proof is enough for this phase.
 
 Trade-off:
 - More explicit control and review burden, lower scope and claim risk.
@@ -192,8 +185,8 @@ Trade-off:
 
 ### Automated Tests
 
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m py_compile aapp/merkle_evidence.py tests/test_merkle_evidence.py
+- python3 -m pytest tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
 
 ### Manual Checklist
 
@@ -205,12 +198,9 @@ Trade-off:
 
 ### Scenario Tests
 
-- Firewall DENY -> CASE_OPENED.
-- Verify FAILED -> CASE_OPENED.
-- Governance UNSAFE -> CASE_OPENED.
-- Low-risk ALLOW -> CASE_NOT_REQUIRED.
-- Closure without approval -> CLOSURE_REJECTED.
-- Closure with approval -> CASE_CLOSED.
+- Valid inclusion proof -> verifies.
+- Tampered record -> failure.
+- Invalid consistency proof -> failure.
 
 ### Validation Script
 
@@ -236,8 +226,8 @@ Main branch:
 
 | Risk | Impact | Mitigation |
 |---|---:|---|
-| Scope drift into automation response | High | Non-goals forbid it. |
-| Closure without approval | High | Approval fixture required. |
+| Proof bug | High | Test odd tree and sibling direction. |
+| Public log implication | Medium | State local receipt only. |
 
 ---
 
@@ -252,7 +242,6 @@ Abort or rollback this phase if:
 - Any phase claims certification, absolute containment, absolute tamper resistance, or absolute bypass resistance.
 - Any phase invents required files that do not exist or are not intentionally created by the scoped phase.
 - Any phase after B27 is edited, generated, or implemented.
-- Any post-B27 implementation file appears in this docs-only backfill.
 
 ---
 
@@ -260,11 +249,11 @@ Abort or rollback this phase if:
 
 When this phase is complete, we will have:
 
-- Failure states become structured incident records.
+- Evidence records have local transparency receipts.
 
 Qualitative outcome:
 
-- Maintainer can close failure with a receipt, not a loose note.
+- Reviewer verifies inclusion without trusting raw ordering.
 
 ---
 
@@ -280,12 +269,11 @@ This phase may transition to the next phase only when:
 - Post-merge validation passes on `main`.
 
 Next phase:
-- Post-B27 work requires a separate scope.
+- B23 - Attestation Binding Policy Link
 
 The next phase depends on:
-- incident.verdict.json
-- incident.casefile.json
-- B27 boundary
+- signed_tree_head.json
+- inclusion proofs
 
 ---
 
@@ -309,20 +297,20 @@ Target timeline:
 ## 15. Final Phase Record
 
 Built in this phase:
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Canonical record hashing.
+- Tree verification.
+- Inclusion proof verification.
+- Consistency proof verification.
+- Tampered record failure.
+- Unsafe private key detection.
 
 Deferred, not removed:
-- Separate scoped post-B27 work can use incident verdicts as input.
+- Attestation binding.
+- External witness after B27.
 
 Final validation:
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m py_compile aapp/merkle_evidence.py tests/test_merkle_evidence.py
+- python3 -m pytest tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
 
 Final status:
 - backfilled from merged historical phase

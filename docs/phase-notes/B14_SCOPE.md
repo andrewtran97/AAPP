@@ -1,38 +1,37 @@
-# B27 - Incident Response Casefile
+# B14 - Release Hygiene Audit
 
 ## 1. Phase Name & ID
 
-**Phase ID:** B27
-**Phase Name:** Incident Response Casefile
-**Phase Type:** incident / governance
-**Status:** backfilled from merged historical phase
-**Primary PR:** #69
-**Primary Issue:** #68
+**Phase ID:** B14
+**Phase Name:** Release Hygiene Audit
+**Phase Type:** audit / governance
+**Status:** backfilled historical audit phase
+**Primary PR:** Historical
+**Primary Issue:** #42
 
 ---
 
 ## 2. Objective / Goal
 
-Convert failure states into structured incident casefiles.
+Audit public release hygiene before expanding product surface.
 
 Business goal:
-- Give maintainers a repeatable failure record with severity, affected refs, containment recommendation, owner, timeline, and closure receipt.
+- Reduce trust risk from stale release, claim, or packaging language.
 
 Technical goal:
-- Create incident casefile generator, timeline JSONL, closure receipt, machine-readable verdict, and report.
+- Review repository status and release claims without adding runtime behavior.
 
 ---
 
 ## 3. Problem Statement
 
 This phase exists because:
-- Failure verdicts need structured follow-up.
-- Closures need approval evidence.
-- Failures are scattered across module outputs.
+- Public artifacts drift.
+- Claim hygiene needs a checkpoint.
 
 Without this phase:
-- Failures remain loose notes.
-- Closure may happen without approval receipt.
+- Release may imply unsupported readiness.
+- Reviewers see conflicting status.
 
 ---
 
@@ -40,26 +39,20 @@ Without this phase:
 
 ### In Scope
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Release hygiene review.
+- Claim boundary check.
+- Issue/PR record review.
 
 ### Out of Scope / Non-Goals
 
-- No SIEM integration.
-- No automation response system.
-- No cloud containment.
-- No auto rollback.
-- No human notification service.
-- No post-B27 implementation.
+- No production code.
+- No new scanner.
+- No certification claim.
+- No package publication.
 
 ### Future Considerations
 
-- Separate scoped post-B27 work can use incident verdicts as input.
+- Surface scan.
 
 ---
 
@@ -103,16 +96,16 @@ Without this phase:
 ### Required Files
 
 Production files:
-- `aapp/incident_response_casefile.py`
+- No unique production source file for this phase.
 
 Test files:
-- `tests/test_incident_response_casefile.py`
+- No unique tracked test file for this phase.
 
 Fixture files:
-- `tests/fixtures/incident_response_casefile/*`
+- No unique fixture file or directory for this phase.
 
 Documentation:
-- `docs/phase-notes/B27_SCOPE.md`
+- `docs/phase-notes/B14_SCOPE.md`
 
 Scripts / Workflows:
 - No unique script or workflow for this phase.
@@ -122,21 +115,13 @@ Examples:
 
 ### Required Output Artifacts
 
-- `incident.casefile.json`
-- `incident.timeline.jsonl`
-- `incident.closure.receipt.json`
-- `incident.verdict.json`
-- `incident.report.md`
+- `release hygiene audit record`
 
 ### Code Artifacts
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Release hygiene review.
+- Claim boundary check.
+- Issue/PR record review.
 
 ### Documentation Artifacts
 
@@ -149,17 +134,12 @@ Examples:
 
 ### Required Previous Phases
 
-- B17 - Deterministic MCP Firewall
-- B19 - Verify Pack
-- B21 - Scoped Network Active Scan
-- B23 - Attestation Binding
-- B24 - Workload Identity Binding
-- B25 - Policy Change Ledger
-- B26 - Evidence Data Governance
+- B13 - Apache-2.0 License
 
 ### Required Tools / Libraries
 
-- Python 3.10+
+- GitHub issue/PR review
+- Markdown
 
 ### Required Design Decisions
 
@@ -172,16 +152,16 @@ Examples:
 
 ## 8. Key Design Decisions
 
-### Decision 1: Casefile only
+### Decision 1: Audit before expansion
 
 Chosen:
-- Open structured casefiles.
+- Review public hygiene before new scanner phases.
 
 Rejected:
-- Automate containment.
+- Continue feature work without audit.
 
 Reason:
-- This phase records failure and closure evidence only.
+- Stale claims compound as repo grows.
 
 Trade-off:
 - More explicit control and review burden, lower scope and claim risk.
@@ -192,8 +172,8 @@ Trade-off:
 
 ### Automated Tests
 
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m unittest discover -s tests -v
+- bash scripts/run_agent_black_box_e2e.sh
 
 ### Manual Checklist
 
@@ -205,12 +185,8 @@ Trade-off:
 
 ### Scenario Tests
 
-- Firewall DENY -> CASE_OPENED.
-- Verify FAILED -> CASE_OPENED.
-- Governance UNSAFE -> CASE_OPENED.
-- Low-risk ALLOW -> CASE_NOT_REQUIRED.
-- Closure without approval -> CLOSURE_REJECTED.
-- Closure with approval -> CASE_CLOSED.
+- Claim scan -> bounded status.
+- Audit issue -> closed clean.
 
 ### Validation Script
 
@@ -236,8 +212,8 @@ Main branch:
 
 | Risk | Impact | Mitigation |
 |---|---:|---|
-| Scope drift into automation response | High | Non-goals forbid it. |
-| Closure without approval | High | Approval fixture required. |
+| Informal audit | Medium | Backfill this manifest. |
+| Overclaim persists | High | Add later claim-boundary checks separately. |
 
 ---
 
@@ -252,7 +228,6 @@ Abort or rollback this phase if:
 - Any phase claims certification, absolute containment, absolute tamper resistance, or absolute bypass resistance.
 - Any phase invents required files that do not exist or are not intentionally created by the scoped phase.
 - Any phase after B27 is edited, generated, or implemented.
-- Any post-B27 implementation file appears in this docs-only backfill.
 
 ---
 
@@ -260,11 +235,11 @@ Abort or rollback this phase if:
 
 When this phase is complete, we will have:
 
-- Failure states become structured incident records.
+- Release hygiene has a recorded gate.
 
 Qualitative outcome:
 
-- Maintainer can close failure with a receipt, not a loose note.
+- Maintainer can point to a hygiene checkpoint.
 
 ---
 
@@ -280,12 +255,10 @@ This phase may transition to the next phase only when:
 - Post-merge validation passes on `main`.
 
 Next phase:
-- Post-B27 work requires a separate scope.
+- B15 - Agent Action Surface Scan
 
 The next phase depends on:
-- incident.verdict.json
-- incident.casefile.json
-- B27 boundary
+- Claim boundary record
 
 ---
 
@@ -309,20 +282,16 @@ Target timeline:
 ## 15. Final Phase Record
 
 Built in this phase:
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Release hygiene review.
+- Claim boundary check.
+- Issue/PR record review.
 
 Deferred, not removed:
-- Separate scoped post-B27 work can use incident verdicts as input.
+- Surface scan.
 
 Final validation:
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m unittest discover -s tests -v
+- bash scripts/run_agent_black_box_e2e.sh
 
 Final status:
-- backfilled from merged historical phase
+- backfilled historical audit phase
