@@ -1,38 +1,38 @@
-# B27 - Incident Response Casefile
+# B3 - MCP Proxy Recorder
 
 ## 1. Phase Name & ID
 
-**Phase ID:** B27
-**Phase Name:** Incident Response Casefile
-**Phase Type:** incident / governance
+**Phase ID:** B3
+**Phase Name:** MCP Proxy Recorder
+**Phase Type:** implementation
 **Status:** backfilled from merged historical phase
-**Primary PR:** #69
-**Primary Issue:** #68
+**Primary PR:** #30
+**Primary Issue:** Historical
 
 ---
 
 ## 2. Objective / Goal
 
-Convert failure states into structured incident casefiles.
+Record MCP-style tool calls crossing the agent/tool boundary.
 
 Business goal:
-- Give maintainers a repeatable failure record with severity, affected refs, containment recommendation, owner, timeline, and closure receipt.
+- Make tool use reviewable without requiring a full security gateway.
 
 Technical goal:
-- Create incident casefile generator, timeline JSONL, closure receipt, machine-readable verdict, and report.
+- Capture JSON-RPC `tools/call` metadata, deny blocked tool names, digest responses, and verify traces.
 
 ---
 
 ## 3. Problem Statement
 
 This phase exists because:
-- Failure verdicts need structured follow-up.
-- Closures need approval evidence.
-- Failures are scattered across module outputs.
+- MCP-style calls can be invisible.
+- Responses can include sensitive data.
+- Denied calls must not execute.
 
 Without this phase:
-- Failures remain loose notes.
-- Closure may happen without approval receipt.
+- Tool calls remain unreviewable.
+- Denied-call evidence is missing.
 
 ---
 
@@ -40,26 +40,23 @@ Without this phase:
 
 ### In Scope
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- MCP-style JSON-RPC recording.
+- Blocked tool deny path.
+- Response digesting.
+- Stdio pass-through recorder.
+- Trace verification.
 
 ### Out of Scope / Non-Goals
 
-- No SIEM integration.
-- No automation response system.
-- No cloud containment.
-- No auto rollback.
-- No human notification service.
-- No post-B27 implementation.
+- No full MCP security gateway.
+- No network gateway.
+- No SIEM.
+- No external marketplace.
 
 ### Future Considerations
 
-- Separate scoped post-B27 work can use incident verdicts as input.
+- Git/CI evidence.
+- Unified bundle.
 
 ---
 
@@ -103,16 +100,16 @@ Without this phase:
 ### Required Files
 
 Production files:
-- `aapp/incident_response_casefile.py`
+- `aapp/mcp_proxy_recorder.py`
 
 Test files:
-- `tests/test_incident_response_casefile.py`
+- `tests/test_mcp_proxy_recorder.py`
 
 Fixture files:
-- `tests/fixtures/incident_response_casefile/*`
+- No unique fixture file or directory for this phase.
 
 Documentation:
-- `docs/phase-notes/B27_SCOPE.md`
+- `docs/phase-notes/B3_SCOPE.md`
 
 Scripts / Workflows:
 - No unique script or workflow for this phase.
@@ -122,21 +119,16 @@ Examples:
 
 ### Required Output Artifacts
 
-- `incident.casefile.json`
-- `incident.timeline.jsonl`
-- `incident.closure.receipt.json`
-- `incident.verdict.json`
-- `incident.report.md`
+- `mcp.trace.jsonl`
+- `mcp report`
 
 ### Code Artifacts
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- MCP-style JSON-RPC recording.
+- Blocked tool deny path.
+- Response digesting.
+- Stdio pass-through recorder.
+- Trace verification.
 
 ### Documentation Artifacts
 
@@ -149,13 +141,8 @@ Examples:
 
 ### Required Previous Phases
 
-- B17 - Deterministic MCP Firewall
-- B19 - Verify Pack
-- B21 - Scoped Network Active Scan
-- B23 - Attestation Binding
-- B24 - Workload Identity Binding
-- B25 - Policy Change Ledger
-- B26 - Evidence Data Governance
+- B1 - Hook Gateway
+- B2 - Local Hook Install / Session Capture
 
 ### Required Tools / Libraries
 
@@ -172,16 +159,16 @@ Examples:
 
 ## 8. Key Design Decisions
 
-### Decision 1: Casefile only
+### Decision 1: Digest response
 
 Chosen:
-- Open structured casefiles.
+- Store digest/metadata instead of raw response.
 
 Rejected:
-- Automate containment.
+- Store full response body.
 
 Reason:
-- This phase records failure and closure evidence only.
+- Tool responses may contain secrets.
 
 Trade-off:
 - More explicit control and review burden, lower scope and claim risk.
@@ -192,8 +179,8 @@ Trade-off:
 
 ### Automated Tests
 
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m unittest tests.test_mcp_proxy_recorder -v
+- python3 -m unittest discover -s tests -v
 
 ### Manual Checklist
 
@@ -205,12 +192,9 @@ Trade-off:
 
 ### Scenario Tests
 
-- Firewall DENY -> CASE_OPENED.
-- Verify FAILED -> CASE_OPENED.
-- Governance UNSAFE -> CASE_OPENED.
-- Low-risk ALLOW -> CASE_NOT_REQUIRED.
-- Closure without approval -> CLOSURE_REJECTED.
-- Closure with approval -> CASE_CLOSED.
+- Allowed `tools/call` -> trace written.
+- Blocked `tools/call` -> no execution.
+- Tampered trace -> failure.
 
 ### Validation Script
 
@@ -236,8 +220,8 @@ Main branch:
 
 | Risk | Impact | Mitigation |
 |---|---:|---|
-| Scope drift into automation response | High | Non-goals forbid it. |
-| Closure without approval | High | Approval fixture required. |
+| Raw secret capture | High | Digest/redact outputs. |
+| Deny bypass | High | Test blocked tool path. |
 
 ---
 
@@ -252,7 +236,6 @@ Abort or rollback this phase if:
 - Any phase claims certification, absolute containment, absolute tamper resistance, or absolute bypass resistance.
 - Any phase invents required files that do not exist or are not intentionally created by the scoped phase.
 - Any phase after B27 is edited, generated, or implemented.
-- Any post-B27 implementation file appears in this docs-only backfill.
 
 ---
 
@@ -260,11 +243,12 @@ Abort or rollback this phase if:
 
 When this phase is complete, we will have:
 
-- Failure states become structured incident records.
+- MCP-style calls are recorded.
+- Denied calls produce evidence.
 
 Qualitative outcome:
 
-- Maintainer can close failure with a receipt, not a loose note.
+- Reviewer can inspect tool-boundary events safely.
 
 ---
 
@@ -280,12 +264,10 @@ This phase may transition to the next phase only when:
 - Post-merge validation passes on `main`.
 
 Next phase:
-- Post-B27 work requires a separate scope.
+- B4 - Git / CI Evidence Adapter
 
 The next phase depends on:
-- incident.verdict.json
-- incident.casefile.json
-- B27 boundary
+- MCP trace format
 
 ---
 
@@ -309,20 +291,19 @@ Target timeline:
 ## 15. Final Phase Record
 
 Built in this phase:
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- MCP-style JSON-RPC recording.
+- Blocked tool deny path.
+- Response digesting.
+- Stdio pass-through recorder.
+- Trace verification.
 
 Deferred, not removed:
-- Separate scoped post-B27 work can use incident verdicts as input.
+- Git/CI evidence.
+- Unified bundle.
 
 Final validation:
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m unittest tests.test_mcp_proxy_recorder -v
+- python3 -m unittest discover -s tests -v
 
 Final status:
 - backfilled from merged historical phase

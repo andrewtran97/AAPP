@@ -1,38 +1,37 @@
-# B27 - Incident Response Casefile
+# B23 - Attestation Binding Policy Link
 
 ## 1. Phase Name & ID
 
-**Phase ID:** B27
-**Phase Name:** Incident Response Casefile
-**Phase Type:** incident / governance
-**Status:** backfilled from merged historical phase
-**Primary PR:** #69
-**Primary Issue:** #68
+**Phase ID:** B23
+**Phase Name:** Attestation Binding Policy Link
+**Phase Type:** identity / binding
+**Status:** backfilled from merged historical phase plus hotfix
+**Primary PR:** #60 / #61
+**Primary Issue:** #59
 
 ---
 
 ## 2. Objective / Goal
 
-Convert failure states into structured incident casefiles.
+Bind evidence to artifact, controller, runtime, and active policy.
 
 Business goal:
-- Give maintainers a repeatable failure record with severity, affected refs, containment recommendation, owner, timeline, and closure receipt.
+- Let a reviewer verify which artifact and policy governed an action.
 
 Technical goal:
-- Create incident casefile generator, timeline JSONL, closure receipt, machine-readable verdict, and report.
+- Create binding and verification logic for component digests, registry decision, and policy version.
 
 ---
 
 ## 3. Problem Statement
 
 This phase exists because:
-- Failure verdicts need structured follow-up.
-- Closures need approval evidence.
-- Failures are scattered across module outputs.
+- Evidence alone does not prove what governed execution.
+- Policy/runtime binding must be explicit.
 
 Without this phase:
-- Failures remain loose notes.
-- Closure may happen without approval receipt.
+- Reviewer cannot connect evidence to artifact/runtime/policy.
+- Stale policy may pass.
 
 ---
 
@@ -40,26 +39,24 @@ Without this phase:
 
 ### In Scope
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Valid binding verification.
+- Evidence/artifact/controller/runtime tamper rejection.
+- Policy digest mismatch.
+- Stale policy rejection.
+- Malformed/unsupported verdicts.
+- Scoped unsafe detection.
 
 ### Out of Scope / Non-Goals
 
-- No SIEM integration.
-- No automation response system.
-- No cloud containment.
-- No auto rollback.
-- No human notification service.
-- No post-B27 implementation.
+- No public CA claim.
+- No remote attestation.
+- No TPM/enclave binding.
+- No automatic policy mutation.
 
 ### Future Considerations
 
-- Separate scoped post-B27 work can use incident verdicts as input.
+- Workload identity binding.
+- TEE adapter after B27.
 
 ---
 
@@ -103,16 +100,16 @@ Without this phase:
 ### Required Files
 
 Production files:
-- `aapp/incident_response_casefile.py`
+- `aapp/attestation_binding.py`
 
 Test files:
-- `tests/test_incident_response_casefile.py`
+- `tests/test_attestation_binding.py`
 
 Fixture files:
-- `tests/fixtures/incident_response_casefile/*`
+- `tests/fixtures/attestation_binding/*`
 
 Documentation:
-- `docs/phase-notes/B27_SCOPE.md`
+- `docs/phase-notes/B23_SCOPE.md`
 
 Scripts / Workflows:
 - No unique script or workflow for this phase.
@@ -122,21 +119,18 @@ Examples:
 
 ### Required Output Artifacts
 
-- `incident.casefile.json`
-- `incident.timeline.jsonl`
-- `incident.closure.receipt.json`
-- `incident.verdict.json`
-- `incident.report.md`
+- `attestation.binding.json`
+- `attestation.verdict.json`
+- `attestation.report.md`
 
 ### Code Artifacts
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Valid binding verification.
+- Evidence/artifact/controller/runtime tamper rejection.
+- Policy digest mismatch.
+- Stale policy rejection.
+- Malformed/unsupported verdicts.
+- Scoped unsafe detection.
 
 ### Documentation Artifacts
 
@@ -149,13 +143,7 @@ Examples:
 
 ### Required Previous Phases
 
-- B17 - Deterministic MCP Firewall
-- B19 - Verify Pack
-- B21 - Scoped Network Active Scan
-- B23 - Attestation Binding
-- B24 - Workload Identity Binding
-- B25 - Policy Change Ledger
-- B26 - Evidence Data Governance
+- B22 - Merkle Evidence Transparency Receipt
 
 ### Required Tools / Libraries
 
@@ -172,16 +160,16 @@ Examples:
 
 ## 8. Key Design Decisions
 
-### Decision 1: Casefile only
+### Decision 1: Digest-bound components
 
 Chosen:
-- Open structured casefiles.
+- Bind by digest.
 
 Rejected:
-- Automate containment.
+- Trust paths/names.
 
 Reason:
-- This phase records failure and closure evidence only.
+- Paths can lie; digests are stronger.
 
 Trade-off:
 - More explicit control and review burden, lower scope and claim risk.
@@ -192,8 +180,8 @@ Trade-off:
 
 ### Automated Tests
 
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m py_compile aapp/attestation_binding.py tests/test_attestation_binding.py
+- python3 -m pytest tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
 
 ### Manual Checklist
 
@@ -205,12 +193,9 @@ Trade-off:
 
 ### Scenario Tests
 
-- Firewall DENY -> CASE_OPENED.
-- Verify FAILED -> CASE_OPENED.
-- Governance UNSAFE -> CASE_OPENED.
-- Low-risk ALLOW -> CASE_NOT_REQUIRED.
-- Closure without approval -> CLOSURE_REJECTED.
-- Closure with approval -> CASE_CLOSED.
+- Valid binding -> VALID.
+- Tampered digest -> INVALID.
+- Sibling unsafe package -> UNSAFE.
 
 ### Validation Script
 
@@ -236,8 +221,8 @@ Main branch:
 
 | Risk | Impact | Mitigation |
 |---|---:|---|
-| Scope drift into automation response | High | Non-goals forbid it. |
-| Closure without approval | High | Approval fixture required. |
+| Unsafe scan false positive | High | Scan explicit component files. |
+| Stale policy accepted | High | Reject stale policy. |
 
 ---
 
@@ -252,7 +237,6 @@ Abort or rollback this phase if:
 - Any phase claims certification, absolute containment, absolute tamper resistance, or absolute bypass resistance.
 - Any phase invents required files that do not exist or are not intentionally created by the scoped phase.
 - Any phase after B27 is edited, generated, or implemented.
-- Any post-B27 implementation file appears in this docs-only backfill.
 
 ---
 
@@ -260,11 +244,11 @@ Abort or rollback this phase if:
 
 When this phase is complete, we will have:
 
-- Failure states become structured incident records.
+- Evidence is tied to artifact/runtime/policy.
 
 Qualitative outcome:
 
-- Maintainer can close failure with a receipt, not a loose note.
+- Reviewer verifies governance context of evidence.
 
 ---
 
@@ -280,12 +264,10 @@ This phase may transition to the next phase only when:
 - Post-merge validation passes on `main`.
 
 Next phase:
-- Post-B27 work requires a separate scope.
+- B24 - Workload Identity Binding
 
 The next phase depends on:
-- incident.verdict.json
-- incident.casefile.json
-- B27 boundary
+- attestation.binding.json
 
 ---
 
@@ -309,20 +291,20 @@ Target timeline:
 ## 15. Final Phase Record
 
 Built in this phase:
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Valid binding verification.
+- Evidence/artifact/controller/runtime tamper rejection.
+- Policy digest mismatch.
+- Stale policy rejection.
+- Malformed/unsupported verdicts.
+- Scoped unsafe detection.
 
 Deferred, not removed:
-- Separate scoped post-B27 work can use incident verdicts as input.
+- Workload identity binding.
+- TEE adapter after B27.
 
 Final validation:
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m py_compile aapp/attestation_binding.py tests/test_attestation_binding.py
+- python3 -m pytest tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
 
 Final status:
-- backfilled from merged historical phase
+- backfilled from merged historical phase plus hotfix

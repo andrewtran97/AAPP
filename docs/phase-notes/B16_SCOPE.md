@@ -1,38 +1,37 @@
-# B27 - Incident Response Casefile
+# B16 - Agent Posture Scan
 
 ## 1. Phase Name & ID
 
-**Phase ID:** B27
-**Phase Name:** Incident Response Casefile
-**Phase Type:** incident / governance
+**Phase ID:** B16
+**Phase Name:** Agent Posture Scan
+**Phase Type:** scanner / implementation
 **Status:** backfilled from merged historical phase
-**Primary PR:** #69
-**Primary Issue:** #68
+**Primary PR:** #46
+**Primary Issue:** #45
 
 ---
 
 ## 2. Objective / Goal
 
-Convert failure states into structured incident casefiles.
+Assess posture risks on discovered automation surfaces.
 
 Business goal:
-- Give maintainers a repeatable failure record with severity, affected refs, containment recommendation, owner, timeline, and closure receipt.
+- Show which workflows/scripts have elevated permissions, secrets, stateful behavior, and rollback gaps.
 
 Technical goal:
-- Create incident casefile generator, timeline JSONL, closure receipt, machine-readable verdict, and report.
+- Produce posture findings, stateful action list, rollback gaps, and report.
 
 ---
 
 ## 3. Problem Statement
 
 This phase exists because:
-- Failure verdicts need structured follow-up.
-- Closures need approval evidence.
-- Failures are scattered across module outputs.
+- Surface map does not show posture risk.
+- Stateful actions need rollback awareness.
 
 Without this phase:
-- Failures remain loose notes.
-- Closure may happen without approval receipt.
+- Reviewer knows a workflow exists but not why it matters.
+- Rollback gaps remain hidden.
 
 ---
 
@@ -40,26 +39,24 @@ Without this phase:
 
 ### In Scope
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- GitHub Actions permission risk detection.
+- Secret/service-account references.
+- CI runner agent path detection.
+- Stateful command detection.
+- Rollback gap detection.
+- No external command execution.
 
 ### Out of Scope / Non-Goals
 
-- No SIEM integration.
-- No automation response system.
-- No cloud containment.
-- No auto rollback.
-- No human notification service.
-- No post-B27 implementation.
+- No policy enforcement.
+- No active network scan.
+- No real rollback.
+- No cloud IAM integration.
 
 ### Future Considerations
 
-- Separate scoped post-B27 work can use incident verdicts as input.
+- Deterministic firewall.
+- State ledger and reversal plan.
 
 ---
 
@@ -103,16 +100,16 @@ Without this phase:
 ### Required Files
 
 Production files:
-- `aapp/incident_response_casefile.py`
+- `aapp/posture_scan.py`
 
 Test files:
-- `tests/test_incident_response_casefile.py`
+- `tests/test_posture_scan.py`
 
 Fixture files:
-- `tests/fixtures/incident_response_casefile/*`
+- `tests/fixtures/posture_scan_repo/*`
 
 Documentation:
-- `docs/phase-notes/B27_SCOPE.md`
+- `docs/phase-notes/B16_SCOPE.md`
 
 Scripts / Workflows:
 - No unique script or workflow for this phase.
@@ -122,21 +119,20 @@ Examples:
 
 ### Required Output Artifacts
 
-- `incident.casefile.json`
-- `incident.timeline.jsonl`
-- `incident.closure.receipt.json`
-- `incident.verdict.json`
-- `incident.report.md`
+- `posture.map.json`
+- `posture.findings.json`
+- `stateful_actions.json`
+- `rollback_gaps.json`
+- `posture.report.md`
 
 ### Code Artifacts
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- GitHub Actions permission risk detection.
+- Secret/service-account references.
+- CI runner agent path detection.
+- Stateful command detection.
+- Rollback gap detection.
+- No external command execution.
 
 ### Documentation Artifacts
 
@@ -149,13 +145,7 @@ Examples:
 
 ### Required Previous Phases
 
-- B17 - Deterministic MCP Firewall
-- B19 - Verify Pack
-- B21 - Scoped Network Active Scan
-- B23 - Attestation Binding
-- B24 - Workload Identity Binding
-- B25 - Policy Change Ledger
-- B26 - Evidence Data Governance
+- B15 - Agent Action Surface Scan
 
 ### Required Tools / Libraries
 
@@ -172,16 +162,16 @@ Examples:
 
 ## 8. Key Design Decisions
 
-### Decision 1: Casefile only
+### Decision 1: Static posture
 
 Chosen:
-- Open structured casefiles.
+- Analyze files statically.
 
 Rejected:
-- Automate containment.
+- Run workflows to infer posture.
 
 Reason:
-- This phase records failure and closure evidence only.
+- No side effects during posture analysis.
 
 Trade-off:
 - More explicit control and review burden, lower scope and claim risk.
@@ -192,8 +182,8 @@ Trade-off:
 
 ### Automated Tests
 
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m py_compile aapp/posture_scan.py tests/test_posture_scan.py
+- python3 -m pytest tests/test_posture_scan.py tests/test_surface_scan.py -q
 
 ### Manual Checklist
 
@@ -205,12 +195,8 @@ Trade-off:
 
 ### Scenario Tests
 
-- Firewall DENY -> CASE_OPENED.
-- Verify FAILED -> CASE_OPENED.
-- Governance UNSAFE -> CASE_OPENED.
-- Low-risk ALLOW -> CASE_NOT_REQUIRED.
-- Closure without approval -> CLOSURE_REJECTED.
-- Closure with approval -> CASE_CLOSED.
+- Elevated permission -> finding.
+- Stateful command -> rollback gap.
 
 ### Validation Script
 
@@ -236,8 +222,8 @@ Main branch:
 
 | Risk | Impact | Mitigation |
 |---|---:|---|
-| Scope drift into automation response | High | Non-goals forbid it. |
-| Closure without approval | High | Approval fixture required. |
+| Static false positive | Medium | Use reason codes. |
+| Scope drift into enforcement | Medium | Keep enforcement for later phase. |
 
 ---
 
@@ -252,7 +238,6 @@ Abort or rollback this phase if:
 - Any phase claims certification, absolute containment, absolute tamper resistance, or absolute bypass resistance.
 - Any phase invents required files that do not exist or are not intentionally created by the scoped phase.
 - Any phase after B27 is edited, generated, or implemented.
-- Any post-B27 implementation file appears in this docs-only backfill.
 
 ---
 
@@ -260,11 +245,11 @@ Abort or rollback this phase if:
 
 When this phase is complete, we will have:
 
-- Failure states become structured incident records.
+- Posture risk is visible.
 
 Qualitative outcome:
 
-- Maintainer can close failure with a receipt, not a loose note.
+- Reviewer sees why a surface is risky.
 
 ---
 
@@ -280,12 +265,11 @@ This phase may transition to the next phase only when:
 - Post-merge validation passes on `main`.
 
 Next phase:
-- Post-B27 work requires a separate scope.
+- B17 - Deterministic MCP Firewall
 
 The next phase depends on:
-- incident.verdict.json
-- incident.casefile.json
-- B27 boundary
+- posture.findings.json
+- stateful_actions.json
 
 ---
 
@@ -309,20 +293,20 @@ Target timeline:
 ## 15. Final Phase Record
 
 Built in this phase:
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- GitHub Actions permission risk detection.
+- Secret/service-account references.
+- CI runner agent path detection.
+- Stateful command detection.
+- Rollback gap detection.
+- No external command execution.
 
 Deferred, not removed:
-- Separate scoped post-B27 work can use incident verdicts as input.
+- Deterministic firewall.
+- State ledger and reversal plan.
 
 Final validation:
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m py_compile aapp/posture_scan.py tests/test_posture_scan.py
+- python3 -m pytest tests/test_posture_scan.py tests/test_surface_scan.py -q
 
 Final status:
 - backfilled from merged historical phase

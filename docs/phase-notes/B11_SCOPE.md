@@ -1,38 +1,37 @@
-# B27 - Incident Response Casefile
+# B11 - Offline Review / Evidence Package QA
 
 ## 1. Phase Name & ID
 
-**Phase ID:** B27
-**Phase Name:** Incident Response Casefile
-**Phase Type:** incident / governance
-**Status:** backfilled from merged historical phase
-**Primary PR:** #69
-**Primary Issue:** #68
+**Phase ID:** B11
+**Phase Name:** Offline Review / Evidence Package QA
+**Phase Type:** review / QA
+**Status:** backfilled from historical QA phase
+**Primary PR:** #17
+**Primary Issue:** Historical
 
 ---
 
 ## 2. Objective / Goal
 
-Convert failure states into structured incident casefiles.
+Validate that offline evidence packages are navigable and bounded.
 
 Business goal:
-- Give maintainers a repeatable failure record with severity, affected refs, containment recommendation, owner, timeline, and closure receipt.
+- Support review where installation is blocked.
 
 Technical goal:
-- Create incident casefile generator, timeline JSONL, closure receipt, machine-readable verdict, and report.
+- Check offline entry points, evidence structure, and claim boundaries.
 
 ---
 
 ## 3. Problem Statement
 
 This phase exists because:
-- Failure verdicts need structured follow-up.
-- Closures need approval evidence.
-- Failures are scattered across module outputs.
+- Install-blocked reviewers need an offline package.
+- QA can be confused with independent validation.
 
 Without this phase:
-- Failures remain loose notes.
-- Closure may happen without approval receipt.
+- Offline review friction stays high.
+- Status language can mislead reviewers.
 
 ---
 
@@ -40,26 +39,22 @@ Without this phase:
 
 ### In Scope
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Offline package QA.
+- Reviewer entry point checks.
+- Claim boundary review.
+- Evidence navigation.
 
 ### Out of Scope / Non-Goals
 
-- No SIEM integration.
-- No automation response system.
-- No cloud containment.
-- No auto rollback.
-- No human notification service.
-- No post-B27 implementation.
+- No independent validation claim.
+- No certification claim.
+- No runtime protocol change.
+- No scanner behavior.
 
 ### Future Considerations
 
-- Separate scoped post-B27 work can use incident verdicts as input.
+- README / contribution surface.
+- License surface.
 
 ---
 
@@ -103,40 +98,36 @@ Without this phase:
 ### Required Files
 
 Production files:
-- `aapp/incident_response_casefile.py`
+- No unique production source file for this phase.
 
 Test files:
-- `tests/test_incident_response_casefile.py`
+- `tests/test_public_demo_external_review.py`
 
 Fixture files:
-- `tests/fixtures/incident_response_casefile/*`
+- No unique fixture file or directory for this phase.
 
 Documentation:
-- `docs/phase-notes/B27_SCOPE.md`
+- `docs/phase-notes/B11_SCOPE.md`
 
 Scripts / Workflows:
-- No unique script or workflow for this phase.
+- `scripts/build_public_demo.sh`
 
 Examples:
 - No unique example artifact for this phase.
 
 ### Required Output Artifacts
 
-- `incident.casefile.json`
-- `incident.timeline.jsonl`
-- `incident.closure.receipt.json`
-- `incident.verdict.json`
-- `incident.report.md`
+- `README-OFFLINE-REVIEW.txt`
+- `PRODUCT_RUN_SUMMARY.txt`
+- `session.report.md`
+- `verification_result.md`
 
 ### Code Artifacts
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Offline package QA.
+- Reviewer entry point checks.
+- Claim boundary review.
+- Evidence navigation.
 
 ### Documentation Artifacts
 
@@ -149,17 +140,14 @@ Examples:
 
 ### Required Previous Phases
 
-- B17 - Deterministic MCP Firewall
-- B19 - Verify Pack
-- B21 - Scoped Network Active Scan
-- B23 - Attestation Binding
-- B24 - Workload Identity Binding
-- B25 - Policy Change Ledger
-- B26 - Evidence Data Governance
+- B8 - E2E Product Run
+- B9 - Release Candidate Pack
+- B10 - Production Signing Interface
 
 ### Required Tools / Libraries
 
 - Python 3.10+
+- Bash
 
 ### Required Design Decisions
 
@@ -172,16 +160,16 @@ Examples:
 
 ## 8. Key Design Decisions
 
-### Decision 1: Casefile only
+### Decision 1: QA only
 
 Chosen:
-- Open structured casefiles.
+- State offline package QA.
 
 Rejected:
-- Automate containment.
+- Claim independent validation.
 
 Reason:
-- This phase records failure and closure evidence only.
+- Trust requires accurate status language.
 
 Trade-off:
 - More explicit control and review burden, lower scope and claim risk.
@@ -192,8 +180,9 @@ Trade-off:
 
 ### Automated Tests
 
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m unittest tests.test_public_demo_external_review -v
+- python3 -m unittest discover -s tests -v
+- bash scripts/build_public_demo.sh evidence/public-demo
 
 ### Manual Checklist
 
@@ -205,12 +194,8 @@ Trade-off:
 
 ### Scenario Tests
 
-- Firewall DENY -> CASE_OPENED.
-- Verify FAILED -> CASE_OPENED.
-- Governance UNSAFE -> CASE_OPENED.
-- Low-risk ALLOW -> CASE_NOT_REQUIRED.
-- Closure without approval -> CLOSURE_REJECTED.
-- Closure with approval -> CASE_CLOSED.
+- Offline package -> contains review entry points.
+- Claim scan -> bounded language.
 
 ### Validation Script
 
@@ -236,8 +221,8 @@ Main branch:
 
 | Risk | Impact | Mitigation |
 |---|---:|---|
-| Scope drift into automation response | High | Non-goals forbid it. |
-| Closure without approval | High | Approval fixture required. |
+| False validation claim | High | Use pending language. |
+| Evidence leakage | High | Keep evidence ignored/redacted. |
 
 ---
 
@@ -252,7 +237,6 @@ Abort or rollback this phase if:
 - Any phase claims certification, absolute containment, absolute tamper resistance, or absolute bypass resistance.
 - Any phase invents required files that do not exist or are not intentionally created by the scoped phase.
 - Any phase after B27 is edited, generated, or implemented.
-- Any post-B27 implementation file appears in this docs-only backfill.
 
 ---
 
@@ -260,11 +244,11 @@ Abort or rollback this phase if:
 
 When this phase is complete, we will have:
 
-- Failure states become structured incident records.
+- Offline package can be reviewed safely.
 
 Qualitative outcome:
 
-- Maintainer can close failure with a receipt, not a loose note.
+- Install-blocked reviewer can navigate without guessing.
 
 ---
 
@@ -280,12 +264,11 @@ This phase may transition to the next phase only when:
 - Post-merge validation passes on `main`.
 
 Next phase:
-- Post-B27 work requires a separate scope.
+- B12 - README / CONTRIBUTING Brand Surface
 
 The next phase depends on:
-- incident.verdict.json
-- incident.casefile.json
-- B27 boundary
+- Offline package status
+- Claim boundaries
 
 ---
 
@@ -309,20 +292,19 @@ Target timeline:
 ## 15. Final Phase Record
 
 Built in this phase:
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Offline package QA.
+- Reviewer entry point checks.
+- Claim boundary review.
+- Evidence navigation.
 
 Deferred, not removed:
-- Separate scoped post-B27 work can use incident verdicts as input.
+- README / contribution surface.
+- License surface.
 
 Final validation:
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m unittest tests.test_public_demo_external_review -v
+- python3 -m unittest discover -s tests -v
+- bash scripts/build_public_demo.sh evidence/public-demo
 
 Final status:
-- backfilled from merged historical phase
+- backfilled from historical QA phase

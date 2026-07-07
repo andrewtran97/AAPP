@@ -1,38 +1,37 @@
-# B27 - Incident Response Casefile
+# B18 - State Ledger + Reversal Plan
 
 ## 1. Phase Name & ID
 
-**Phase ID:** B27
-**Phase Name:** Incident Response Casefile
-**Phase Type:** incident / governance
+**Phase ID:** B18
+**Phase Name:** State Ledger + Reversal Plan
+**Phase Type:** ledger / implementation
 **Status:** backfilled from merged historical phase
-**Primary PR:** #69
-**Primary Issue:** #68
+**Primary PR:** #50
+**Primary Issue:** #49
 
 ---
 
 ## 2. Objective / Goal
 
-Convert failure states into structured incident casefiles.
+Record state-changing actions and planned reversals without performing rollback.
 
 Business goal:
-- Give maintainers a repeatable failure record with severity, affected refs, containment recommendation, owner, timeline, and closure receipt.
+- Make state mutation risk reviewable before remediation action.
 
 Technical goal:
-- Create incident casefile generator, timeline JSONL, closure receipt, machine-readable verdict, and report.
+- Create ledger entries, digests, hash-chain linkage, reversal candidates, and rollback-gap reports.
 
 ---
 
 ## 3. Problem Statement
 
 This phase exists because:
-- Failure verdicts need structured follow-up.
-- Closures need approval evidence.
-- Failures are scattered across module outputs.
+- Policy decisions do not show state impact.
+- State-changing actions need reversal awareness.
 
 Without this phase:
-- Failures remain loose notes.
-- Closure may happen without approval receipt.
+- State mutations are untracked.
+- Reviewer cannot tell whether reversal is possible.
 
 ---
 
@@ -40,26 +39,25 @@ Without this phase:
 
 ### In Scope
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Ledger entry creation.
+- Pre/post state digests.
+- Hash-chain linkage.
+- Known reversal candidates.
+- Irreversible/manual review classification.
+- Missing reversal findings.
+- No external action execution.
 
 ### Out of Scope / Non-Goals
 
-- No SIEM integration.
+- No real rollback.
+- No production mutation.
+- No cloud state restore.
 - No automation response system.
-- No cloud containment.
-- No auto rollback.
-- No human notification service.
-- No post-B27 implementation.
 
 ### Future Considerations
 
-- Separate scoped post-B27 work can use incident verdicts as input.
+- Verify pack.
+- Incident casefile.
 
 ---
 
@@ -103,16 +101,16 @@ Without this phase:
 ### Required Files
 
 Production files:
-- `aapp/incident_response_casefile.py`
+- `aapp/state_ledger.py`
 
 Test files:
-- `tests/test_incident_response_casefile.py`
+- `tests/test_state_ledger.py`
 
 Fixture files:
-- `tests/fixtures/incident_response_casefile/*`
+- `tests/fixtures/state_ledger_actions.json`
 
 Documentation:
-- `docs/phase-notes/B27_SCOPE.md`
+- `docs/phase-notes/B18_SCOPE.md`
 
 Scripts / Workflows:
 - No unique script or workflow for this phase.
@@ -122,21 +120,19 @@ Examples:
 
 ### Required Output Artifacts
 
-- `incident.casefile.json`
-- `incident.timeline.jsonl`
-- `incident.closure.receipt.json`
-- `incident.verdict.json`
-- `incident.report.md`
+- `state.ledger.jsonl`
+- `reversal.plan.json`
+- `reversal.report.md`
 
 ### Code Artifacts
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Ledger entry creation.
+- Pre/post state digests.
+- Hash-chain linkage.
+- Known reversal candidates.
+- Irreversible/manual review classification.
+- Missing reversal findings.
+- No external action execution.
 
 ### Documentation Artifacts
 
@@ -150,12 +146,6 @@ Examples:
 ### Required Previous Phases
 
 - B17 - Deterministic MCP Firewall
-- B19 - Verify Pack
-- B21 - Scoped Network Active Scan
-- B23 - Attestation Binding
-- B24 - Workload Identity Binding
-- B25 - Policy Change Ledger
-- B26 - Evidence Data Governance
 
 ### Required Tools / Libraries
 
@@ -172,16 +162,16 @@ Examples:
 
 ## 8. Key Design Decisions
 
-### Decision 1: Casefile only
+### Decision 1: Plan, not rollback
 
 Chosen:
-- Open structured casefiles.
+- Generate reversal plan.
 
 Rejected:
-- Automate containment.
+- Execute rollback.
 
 Reason:
-- This phase records failure and closure evidence only.
+- Execution is higher-risk and out of scope.
 
 Trade-off:
 - More explicit control and review burden, lower scope and claim risk.
@@ -192,8 +182,8 @@ Trade-off:
 
 ### Automated Tests
 
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m py_compile aapp/state_ledger.py tests/test_state_ledger.py
+- python3 -m pytest tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
 
 ### Manual Checklist
 
@@ -205,12 +195,9 @@ Trade-off:
 
 ### Scenario Tests
 
-- Firewall DENY -> CASE_OPENED.
-- Verify FAILED -> CASE_OPENED.
-- Governance UNSAFE -> CASE_OPENED.
-- Low-risk ALLOW -> CASE_NOT_REQUIRED.
-- Closure without approval -> CLOSURE_REJECTED.
-- Closure with approval -> CASE_CLOSED.
+- Stateful action -> ledger row.
+- Known reversal -> candidate.
+- No reversal -> gap.
 
 ### Validation Script
 
@@ -236,8 +223,8 @@ Main branch:
 
 | Risk | Impact | Mitigation |
 |---|---:|---|
-| Scope drift into automation response | High | Non-goals forbid it. |
-| Closure without approval | High | Approval fixture required. |
+| Fake rollback confidence | High | Call it reversal plan. |
+| Ledger tamper | Medium | Hash-chain linkage. |
 
 ---
 
@@ -252,7 +239,6 @@ Abort or rollback this phase if:
 - Any phase claims certification, absolute containment, absolute tamper resistance, or absolute bypass resistance.
 - Any phase invents required files that do not exist or are not intentionally created by the scoped phase.
 - Any phase after B27 is edited, generated, or implemented.
-- Any post-B27 implementation file appears in this docs-only backfill.
 
 ---
 
@@ -260,11 +246,11 @@ Abort or rollback this phase if:
 
 When this phase is complete, we will have:
 
-- Failure states become structured incident records.
+- State-changing actions are ledgered.
 
 Qualitative outcome:
 
-- Maintainer can close failure with a receipt, not a loose note.
+- Reviewer sees what would need reversal.
 
 ---
 
@@ -280,12 +266,11 @@ This phase may transition to the next phase only when:
 - Post-merge validation passes on `main`.
 
 Next phase:
-- Post-B27 work requires a separate scope.
+- B19 - Verify Pack
 
 The next phase depends on:
-- incident.verdict.json
-- incident.casefile.json
-- B27 boundary
+- state.ledger.jsonl
+- reversal.plan.json
 
 ---
 
@@ -309,20 +294,21 @@ Target timeline:
 ## 15. Final Phase Record
 
 Built in this phase:
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Ledger entry creation.
+- Pre/post state digests.
+- Hash-chain linkage.
+- Known reversal candidates.
+- Irreversible/manual review classification.
+- Missing reversal findings.
+- No external action execution.
 
 Deferred, not removed:
-- Separate scoped post-B27 work can use incident verdicts as input.
+- Verify pack.
+- Incident casefile.
 
 Final validation:
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m py_compile aapp/state_ledger.py tests/test_state_ledger.py
+- python3 -m pytest tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
 
 Final status:
 - backfilled from merged historical phase

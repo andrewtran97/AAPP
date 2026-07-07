@@ -1,38 +1,36 @@
-# B27 - Incident Response Casefile
+# B24 - Workload Identity Binding
 
 ## 1. Phase Name & ID
 
-**Phase ID:** B27
-**Phase Name:** Incident Response Casefile
-**Phase Type:** incident / governance
+**Phase ID:** B24
+**Phase Name:** Workload Identity Binding
+**Phase Type:** identity / implementation
 **Status:** backfilled from merged historical phase
-**Primary PR:** #69
-**Primary Issue:** #68
+**Primary PR:** #63
+**Primary Issue:** #62
 
 ---
 
 ## 2. Objective / Goal
 
-Convert failure states into structured incident casefiles.
+Bind governed actions to workload identity.
 
 Business goal:
-- Give maintainers a repeatable failure record with severity, affected refs, containment recommendation, owner, timeline, and closure receipt.
+- Let reviewers verify which workload identity produced or executed a governed action.
 
 Technical goal:
-- Create incident casefile generator, timeline JSONL, closure receipt, machine-readable verdict, and report.
+- Validate identity claim, registry status, scope, artifact, policy allowance, expiration, and digest integrity.
 
 ---
 
 ## 3. Problem Statement
 
 This phase exists because:
-- Failure verdicts need structured follow-up.
-- Closures need approval evidence.
-- Failures are scattered across module outputs.
+- Artifact/policy binding lacks workload identity.
+- Identity and scope failure must be distinct.
 
 Without this phase:
-- Failures remain loose notes.
-- Closure may happen without approval receipt.
+- Reviewer cannot separate inactive identity from wrong scope.
 
 ---
 
@@ -40,26 +38,26 @@ Without this phase:
 
 ### In Scope
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Valid identity binding.
+- Expired identity rejection.
+- Unregistered workload rejection.
+- Scope mismatch checks.
+- Policy not allowed.
+- Tampered identity digest rejection.
+- Malformed/unsupported/unsafe verdicts.
 
 ### Out of Scope / Non-Goals
 
-- No SIEM integration.
-- No automation response system.
-- No cloud containment.
-- No auto rollback.
-- No human notification service.
-- No post-B27 implementation.
+- No SPIRE deployment.
+- No public CA claim.
+- No mTLS sidecar.
+- No TPM/enclave binding.
+- No cloud IAM federation.
 
 ### Future Considerations
 
-- Separate scoped post-B27 work can use incident verdicts as input.
+- Policy change ledger.
+- Workload provider adapter after B27.
 
 ---
 
@@ -103,16 +101,16 @@ Without this phase:
 ### Required Files
 
 Production files:
-- `aapp/incident_response_casefile.py`
+- `aapp/workload_identity.py`
 
 Test files:
-- `tests/test_incident_response_casefile.py`
+- `tests/test_workload_identity.py`
 
 Fixture files:
-- `tests/fixtures/incident_response_casefile/*`
+- `tests/fixtures/workload_identity/*`
 
 Documentation:
-- `docs/phase-notes/B27_SCOPE.md`
+- `docs/phase-notes/B24_SCOPE.md`
 
 Scripts / Workflows:
 - No unique script or workflow for this phase.
@@ -122,21 +120,19 @@ Examples:
 
 ### Required Output Artifacts
 
-- `incident.casefile.json`
-- `incident.timeline.jsonl`
-- `incident.closure.receipt.json`
-- `incident.verdict.json`
-- `incident.report.md`
+- `identity.binding.json`
+- `identity.verdict.json`
+- `identity.report.md`
 
 ### Code Artifacts
 
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Valid identity binding.
+- Expired identity rejection.
+- Unregistered workload rejection.
+- Scope mismatch checks.
+- Policy not allowed.
+- Tampered identity digest rejection.
+- Malformed/unsupported/unsafe verdicts.
 
 ### Documentation Artifacts
 
@@ -149,13 +145,7 @@ Examples:
 
 ### Required Previous Phases
 
-- B17 - Deterministic MCP Firewall
-- B19 - Verify Pack
-- B21 - Scoped Network Active Scan
-- B23 - Attestation Binding
-- B24 - Workload Identity Binding
-- B25 - Policy Change Ledger
-- B26 - Evidence Data Governance
+- B23 - Attestation Binding Policy Link
 
 ### Required Tools / Libraries
 
@@ -172,16 +162,16 @@ Examples:
 
 ## 8. Key Design Decisions
 
-### Decision 1: Casefile only
+### Decision 1: Registry-backed identity
 
 Chosen:
-- Open structured casefiles.
+- Validate claim against registry/scope.
 
 Rejected:
-- Automate containment.
+- Trust claim alone.
 
 Reason:
-- This phase records failure and closure evidence only.
+- Identity claims need registry context.
 
 Trade-off:
 - More explicit control and review burden, lower scope and claim risk.
@@ -192,8 +182,8 @@ Trade-off:
 
 ### Automated Tests
 
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m py_compile aapp/workload_identity.py tests/test_workload_identity.py
+- python3 -m pytest tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
 
 ### Manual Checklist
 
@@ -205,12 +195,10 @@ Trade-off:
 
 ### Scenario Tests
 
-- Firewall DENY -> CASE_OPENED.
-- Verify FAILED -> CASE_OPENED.
-- Governance UNSAFE -> CASE_OPENED.
-- Low-risk ALLOW -> CASE_NOT_REQUIRED.
-- Closure without approval -> CLOSURE_REJECTED.
-- Closure with approval -> CASE_CLOSED.
+- Valid -> VALID.
+- Expired -> EXPIRED_IDENTITY.
+- Registered wrong scope -> SCOPE_MISMATCH.
+- Unregistered -> IDENTITY_NOT_ACTIVE.
 
 ### Validation Script
 
@@ -236,8 +224,8 @@ Main branch:
 
 | Risk | Impact | Mitigation |
 |---|---:|---|
-| Scope drift into automation response | High | Non-goals forbid it. |
-| Closure without approval | High | Approval fixture required. |
+| Verdict precedence confusion | High | Use isolated fixtures. |
+| Identity provider overclaim | Medium | No deployment claim. |
 
 ---
 
@@ -252,7 +240,6 @@ Abort or rollback this phase if:
 - Any phase claims certification, absolute containment, absolute tamper resistance, or absolute bypass resistance.
 - Any phase invents required files that do not exist or are not intentionally created by the scoped phase.
 - Any phase after B27 is edited, generated, or implemented.
-- Any post-B27 implementation file appears in this docs-only backfill.
 
 ---
 
@@ -260,11 +247,11 @@ Abort or rollback this phase if:
 
 When this phase is complete, we will have:
 
-- Failure states become structured incident records.
+- Workload identity is part of trust chain.
 
 Qualitative outcome:
 
-- Maintainer can close failure with a receipt, not a loose note.
+- Reviewer separates identity failure from scope failure.
 
 ---
 
@@ -280,12 +267,10 @@ This phase may transition to the next phase only when:
 - Post-merge validation passes on `main`.
 
 Next phase:
-- Post-B27 work requires a separate scope.
+- B25 - Policy Change Ledger Dual Control
 
 The next phase depends on:
-- incident.verdict.json
-- incident.casefile.json
-- B27 boundary
+- identity.binding.json
 
 ---
 
@@ -309,20 +294,21 @@ Target timeline:
 ## 15. Final Phase Record
 
 Built in this phase:
-- Incident casefile generator.
-- Timeline JSONL.
-- Closure receipt.
-- Machine-readable incident verdict.
-- Source verdict handling.
-- Unsafe source rejection.
-- Closure approval validation.
+- Valid identity binding.
+- Expired identity rejection.
+- Unregistered workload rejection.
+- Scope mismatch checks.
+- Policy not allowed.
+- Tampered identity digest rejection.
+- Malformed/unsupported/unsafe verdicts.
 
 Deferred, not removed:
-- Separate scoped post-B27 work can use incident verdicts as input.
+- Policy change ledger.
+- Workload provider adapter after B27.
 
 Final validation:
-- python3 -m py_compile aapp/incident_response_casefile.py tests/test_incident_response_casefile.py
-- python3 -m pytest tests/test_incident_response_casefile.py tests/test_evidence_data_governance.py tests/test_policy_change_ledger.py tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
+- python3 -m py_compile aapp/workload_identity.py tests/test_workload_identity.py
+- python3 -m pytest tests/test_workload_identity.py tests/test_attestation_binding.py tests/test_merkle_evidence.py tests/test_network_active_scan.py tests/test_agent_black_box_scan_action.py tests/test_verify_pack.py tests/test_state_ledger.py tests/test_deterministic_firewall.py tests/test_posture_scan.py tests/test_surface_scan.py -q
 
 Final status:
 - backfilled from merged historical phase
