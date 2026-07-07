@@ -74,7 +74,7 @@ Do not claim:
 - Qubes-certified
 - government-grade
 - does not claim military-grade
-- compliance is not guaranteed
+- compliance guaranteed
 - AI safety solved
 - live MCP secured
 - live MCP integration

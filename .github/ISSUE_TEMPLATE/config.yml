@@ -2,4 +2,4 @@ blank_issues_enabled: false
 contact_links:
   - name: Security vulnerability report
     url: https://github.com/andrewtran97/AAPP/security/advisories/new
-    about: Report vulnerabilities privately when available.
+    about: Do not disclose vulnerabilities in public issues. Report vulnerabilities privately when available.

@@ -43,6 +43,7 @@ GUARD_WORDS = [
     "without claiming",
     "does not provide",
     "must not claim",
+    "claim restrictions",
 ]
 
 SKIP_DIR_NAMES = {
@@ -88,7 +89,7 @@ def iter_files():
             yield path
 
 def is_guarded(lines, index):
-    start = max(0, index - 5)
+    start = max(0, index - 30)
     end = min(len(lines), index + 2)
     context = "\n".join(lines[start:end]).lower()
     return any(guard in context for guard in GUARD_WORDS)

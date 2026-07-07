@@ -258,7 +258,7 @@ Do not claim:
 - government-grade
 - does not claim military-grade
 - unbreakable
-- compliance is not guaranteed
+- compliance guaranteed
 - AI safety solved
 
 Allowed wording:
