@@ -1,0 +1,17 @@
+{
+  "change_id": "policy-change-001",
+  "change_reason": "add refund guardrail",
+  "created_at": "2026-01-01T00:00:00Z",
+  "new_policy_digest": "sha256:53de7e42956d0ef60e1d18571ca4dc143aab4a832a1b82966983128a72f25fde",
+  "new_policy_version": "v2",
+  "old_policy_digest": "sha256:266fc4320103b6ddfa1c84ab7085d187713bcfc191edd1ce6cbdfaa6ed7f1472",
+  "old_policy_version": "v1",
+  "policy_id": "default-agent-policy",
+  "requested_by": "policy-author-001",
+  "required_approval_count": 2,
+  "risk_class": "HIGH",
+  "rollback_policy_digest": "sha256:266fc4320103b6ddfa1c84ab7085d187713bcfc191edd1ce6cbdfaa6ed7f1472",
+  "rollback_policy_version": "v1",
+  "schema_version": "aapp.policy_change_proposal.v1",
+  "valid_until": "2099-01-01T00:00:00Z"
+}

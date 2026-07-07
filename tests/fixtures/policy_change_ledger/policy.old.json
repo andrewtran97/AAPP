@@ -1,0 +1,14 @@
+{
+  "enforcement_mode": "enforce",
+  "policy_id": "default-agent-policy",
+  "policy_version": "v1",
+  "rules": [
+    {
+      "effect": "DENY",
+      "rule_id": "deny-delete-db",
+      "tool": "delete_database"
+    }
+  ],
+  "schema_version": "aapp.policy.v1",
+  "security_level": "strict"
+}
