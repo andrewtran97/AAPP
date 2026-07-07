@@ -1,0 +1,49 @@
+[
+  {
+    "step_id": "step-0001",
+    "action_id": "act-create-file",
+    "capability": "filesystem",
+    "operation": "create_file",
+    "target_ref": "reports/scope.json",
+    "pre_state": {"exists": false},
+    "post_state": {"exists": true, "digest": "sha256:file-after"}
+  },
+  {
+    "step_id": "step-0002",
+    "action_id": "act-deploy",
+    "capability": "deployment",
+    "operation": "deploy_code",
+    "target_ref": "service/api",
+    "previous_version_ref": "deploy-v1",
+    "pre_state": {"version": "deploy-v1"},
+    "post_state": {"version": "deploy-v2"}
+  },
+  {
+    "step_id": "step-0003",
+    "action_id": "act-db-update",
+    "capability": "database",
+    "operation": "update_row",
+    "target_ref": "db/orders/row-123",
+    "snapshot_ref": "snapshot-before-update",
+    "pre_state": {"status": "pending"},
+    "post_state": {"status": "refunded"}
+  },
+  {
+    "step_id": "step-0004",
+    "action_id": "act-payment",
+    "capability": "payment",
+    "operation": "refund_payment",
+    "target_ref": "payment/pay_123",
+    "pre_state": {"refunded": false},
+    "post_state": {"refunded": true}
+  },
+  {
+    "step_id": "step-0005",
+    "action_id": "act-unknown",
+    "capability": "unknown",
+    "operation": "mystery_mutation",
+    "target_ref": "unknown/target",
+    "pre_state": {"state": "before"},
+    "post_state": {"state": "after"}
+  }
+]
