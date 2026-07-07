@@ -226,3 +226,9 @@ License
 See LICENSE.
 
 If no LICENSE file is present, usage rights are not granted beyond normal repository viewing. Add an explicit license before presenting this as an open-source package.
+
+## License
+
+Apache License 2.0.
+
+See `LICENSE`.
