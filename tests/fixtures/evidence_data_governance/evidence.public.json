@@ -1,0 +1,14 @@
+{
+  "data_classification": "public",
+  "evidence_id": "evidence-public-001",
+  "export_requested": false,
+  "jurisdiction": "US",
+  "payload": {
+    "finding_count": 0,
+    "summary": "public scan summary"
+  },
+  "retention_days": 30,
+  "schema_version": "aapp.evidence_data.v1",
+  "sharing_scope": "public",
+  "storage_requested": true
+}
