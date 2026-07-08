@@ -1,0 +1,150 @@
+{
+  "schema": "aapp.tool_data_flow_governance.fixture.v1",
+  "cases": [
+    {
+      "name": "allowed_public_flow",
+      "input": {
+        "record_id": "b31-flow-001",
+        "actor": "agent.local",
+        "tool": "read_file",
+        "action": "read",
+        "resource": "README.md",
+        "input_classification": "PUBLIC",
+        "output_classification": "PUBLIC",
+        "evidence_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000031",
+        "export_requested": true,
+        "training_rights": true,
+        "tenant_id": "tenant-a",
+        "target_tenant_id": "tenant-a",
+        "contains_raw_secret": false
+      },
+      "expected": {
+        "governance_verdict": "ALLOWED",
+        "reason_codes": ["INPUT_ALLOWED", "OUTPUT_ALLOWED"],
+        "export_allowed": true,
+        "training_allowed": true
+      }
+    },
+    {
+      "name": "redacted_secret_like_output",
+      "input": {
+        "record_id": "b31-flow-002",
+        "actor": "agent.local",
+        "tool": "summarize_file",
+        "action": "summarize",
+        "resource": "incident-notes.md",
+        "input_classification": "INTERNAL",
+        "output_classification": "SECRET_LIKE",
+        "evidence_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000032",
+        "export_requested": true,
+        "training_rights": false,
+        "tenant_id": "tenant-a",
+        "target_tenant_id": "tenant-a",
+        "contains_raw_secret": false
+      },
+      "expected": {
+        "governance_verdict": "REDACTED",
+        "reason_codes": ["OUTPUT_REDACTED"],
+        "export_allowed": true,
+        "training_allowed": false
+      }
+    },
+    {
+      "name": "raw_secret_blocked",
+      "input": {
+        "record_id": "b31-flow-003",
+        "actor": "agent.local",
+        "tool": "read_env",
+        "action": "read",
+        "resource": ".env",
+        "input_classification": "SECRET",
+        "output_classification": "SECRET",
+        "evidence_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000033",
+        "export_requested": true,
+        "training_rights": false,
+        "tenant_id": "tenant-a",
+        "target_tenant_id": "tenant-a",
+        "contains_raw_secret": true
+      },
+      "expected": {
+        "governance_verdict": "BLOCKED",
+        "reason_codes": ["RAW_SECRET_BLOCKED"],
+        "export_allowed": false,
+        "training_allowed": false
+      }
+    },
+    {
+      "name": "export_requires_governance",
+      "input": {
+        "record_id": "b31-flow-004",
+        "actor": "agent.local",
+        "tool": "export_evidence",
+        "action": "export",
+        "resource": "evidence-record",
+        "input_classification": "INTERNAL",
+        "output_classification": "INTERNAL",
+        "evidence_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000034",
+        "export_requested": true,
+        "training_rights": false,
+        "tenant_id": "tenant-a",
+        "target_tenant_id": "tenant-a",
+        "contains_raw_secret": false,
+        "has_governance_verdict": false
+      },
+      "expected": {
+        "governance_verdict": "EXPORT_NOT_ALLOWED",
+        "reason_codes": ["EXPORT_REQUIRES_GOVERNANCE"],
+        "export_allowed": false,
+        "training_allowed": false
+      }
+    },
+    {
+      "name": "training_requires_rights",
+      "input": {
+        "record_id": "b31-flow-005",
+        "actor": "agent.local",
+        "tool": "prepare_training_record",
+        "action": "train",
+        "resource": "tool-output",
+        "input_classification": "INTERNAL",
+        "output_classification": "INTERNAL",
+        "evidence_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000035",
+        "export_requested": false,
+        "training_rights": false,
+        "tenant_id": "tenant-a",
+        "target_tenant_id": "tenant-a",
+        "contains_raw_secret": false
+      },
+      "expected": {
+        "governance_verdict": "TRAINING_NOT_ALLOWED",
+        "reason_codes": ["TRAINING_REQUIRES_RIGHTS"],
+        "export_allowed": false,
+        "training_allowed": false
+      }
+    },
+    {
+      "name": "tenant_boundary_mismatch",
+      "input": {
+        "record_id": "b31-flow-006",
+        "actor": "agent.local",
+        "tool": "copy_record",
+        "action": "write",
+        "resource": "customer-record",
+        "input_classification": "RESTRICTED",
+        "output_classification": "RESTRICTED",
+        "evidence_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000036",
+        "export_requested": false,
+        "training_rights": false,
+        "tenant_id": "tenant-a",
+        "target_tenant_id": "tenant-b",
+        "contains_raw_secret": false
+      },
+      "expected": {
+        "governance_verdict": "TENANT_BOUNDARY_VIOLATION",
+        "reason_codes": ["TENANT_BOUNDARY_MISMATCH"],
+        "export_allowed": false,
+        "training_allowed": false
+      }
+    }
+  ]
+}
