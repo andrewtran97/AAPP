@@ -262,3 +262,38 @@ Claim boundaries:
 
 cat docs/CLAIM_BOUNDARIES.md
 <!-- B27C_DEVELOPER_QUICKSTART_END -->
+
+<!-- B27D_PUBLIC_RELEASE_REVIEW_START -->
+## Public Release Review
+
+AAPP / Agent Black Box provides a local review path for AI agent and CI/CD control evidence.
+
+Start here:
+
+- docs/CLAIM_BOUNDARIES.md
+- docs/PUBLIC_RELEASE_READINESS.md
+- docs/EXTERNAL_REVIEWER_GUIDE.md
+- docs/RELEASE_NOTES_DRAFT.md
+
+Run local validation:
+
+bash quickstart.sh
+
+Run tests:
+
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v
+
+B27D is documentation-only.
+
+It does not change runtime behavior.
+
+It does not change scanner behavior.
+
+It does not change policy engine behavior.
+
+It does not implement B28.
+
+It does not claim external approval.
+
+It does not claim production deployment approval.
+<!-- B27D_PUBLIC_RELEASE_REVIEW_END -->
