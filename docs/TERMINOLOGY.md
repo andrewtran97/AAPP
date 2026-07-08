@@ -1,76 +1,68 @@
+# Agent Black Box Terminology
 
-AAPP Terminology
+## Correct product line
 
-This document defines canonical terms for AAPP / Agent Black Box.
+Agent Black Box = Zero Trust Control + Evidence Plane for CI/CD and Agentic Workflows.
 
-Agent Black Box
+## Correct public language
 
-An AI Agent Control + Evidence Plane for AI agent and CI/CD actions.
+Use:
 
-Evidence Plane
+- deterministic control decisions
+- tamper-evident evidence
+- workload identity binding
+- policy-change evidence
+- evidence data governance
+- incident-ready casefile
+- machine-readable verdict
+- designed to support future regulated-enterprise review
 
-The layer that records, hashes, verifies, governs, and exports evidence records.
+## Do not describe as final category
 
-Control Plane
+Do not describe Agent Black Box as:
 
-The layer that decides whether an action is allowed, denied, blocked, or requires approval.
+- flight recorder only
+- logging tool only
+- observability tool
+- SIEM
+- IDS
+- SOAR
+- scanner only
+- compliance certification product
+- full containment guarantee
 
-Scope Artifact
+## Claim boundary
 
-A tracked artifact defining what target, tool, action, environment, and time window are authorized.
+Correct:
 
-Intent
+- Designed to produce evidence that may support future regulated-enterprise review.
+- Not certified.
+- Does not claim FedRAMP authorization.
+- Does not claim FIPS validation.
+- Does not claim CISA approval.
 
-The structured purpose of a user, agent, workflow, or tool request.
+Forbidden public claims:
 
-Policy Abstraction
+- compliance guaranteed
+- full containment
+- impossible to tamper
+- impossible to bypass
+- military-grade
+- federal-grade
+- production certified
+- FedRAMP authorized
+- FIPS validated
+- CISA approved
+- DoD certified
+- NASA certified
+- Microsoft certified
 
-The conversion of raw tool calls into canonical subject, action, resource, context, risk class, obligations, and reason codes.
+## Runtime evidence
 
-Deterministic Policy Decision
+`.aapp` is local runtime/evidence output.
 
-A non-probabilistic policy result such as ALLOW, DENY, REQUIRE_APPROVAL, BLOCKED, or UNSUPPORTED.
+Do not force-add ignored `.aapp` content.
 
-Workload Identity
+Tracked phase manifests belong under:
 
-The identity bound to an agent, CI job, controller, or runtime workload.
-
-Attestation Binding
-
-The binding of evidence digest, artifact digest, controller digest, runtime digest, and policy digest.
-
-State Ledger
-
-A record of state-changing actions with pre-state, post-state, digest, and reversal metadata.
-
-Reversal Plan
-
-A plan describing whether an action can be reversed, requires manual review, or is irreversible.
-
-Verify Pack
-
-A machine-readable package proving that evidence artifacts, manifests, and digests verify.
-
-Governance Verdict
-
-A decision about evidence classification, redaction, retention, export, and data rights.
-
-Incident Casefile
-
-A structured failure record containing source verdicts, timeline, closure receipt, and report.
-
-Remediation Receipt
-
-A receipt linking finding, fix, rescan, digest, and closure evidence.
-
-Claim Boundary
-
-A public-language boundary that prevents unsupported claims about certification, authorization, validation, or absolute security.
-
-Adversarial Systems Intelligence
-
-A defensive, authorized layer that converts attacker-style thinking into bounded controls: network behavior modeling, human-intent risk guarding, artifact trust, attack-path hypotheses, decision boundaries, and red-team evidence packs.
-
-Forbidden Public Claims
-
-Do not claim authorization, validation, approval, certification, full containment, impossible-to-bypass security, or guaranteed compliance.
+`docs/phase-notes/`

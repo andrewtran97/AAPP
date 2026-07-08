@@ -1,70 +1,74 @@
-# AAPP Canonical Roadmap
+# Agent Black Box Canonical Roadmap
 
-This document is the canonical roadmap for AAPP / Agent Black Box.
+## Current state
 
-Agent Black Box is an AI Agent Control + Evidence Plane. It gives AI agent and CI/CD actions a deterministic control layer, workload identity binding, tamper-evident evidence, policy-change records, data-governance verdicts, and incident-ready casefiles.
+Latest accepted baseline on main: B27A partial manifest backfill exists for B0-B27 phase notes.
 
-## Claim Boundary
+This document completes the canonical roadmap surface required by B27A.
 
-AAPP produces evidence that can support regulated-enterprise review.
+## Immediate gates before B28
 
-AAPP does not claim authorization, validation, approval, certification, full containment, or impossible-to-bypass security.
+- B27A Phase Manifest Backfill completion
+- B27B Repo Professionalization Gate
+- B27C Developer Distribution Gate
+- B27D Public Release Readiness + Maturity Gate
 
-## Current Accepted Baseline
+## Next implementation gates
 
-- Latest accepted phase before repo professionalization: B27 Incident Response Casefile.
-- B27A: Phase Manifest Backfill.
-- B27B: Repo Professionalization Gate.
+- B28 Policy Abstraction + Deterministic Risk Signals
+- B28A Agent Step Envelope + Tool Request Abstraction
+- B28B Agent Capability Token Decision
+- B28C Agent Orchestration Evidence Bridge
+- B29 Evidence Performance Plane
+- B29A Preflight Simulation + Shadow Execution Gate
+- B29B Learning Ledger + Policy Proposal Engine
+- B29C Progressive Delivery Controller
+- B30 External Witness Receipt
+- B31 Tool Data Flow Governance
+- B31A Data Strategy & Evidence Rights Ledger
+- B31B Dataset Manifest + Taint Ledger
+- B31C Deletion Graph + Retention Enforcement
+- B31D Synthetic Data + Benchmark Dataset Lane
+- B32 Audit / SIEM Export
+- B33 Policy Backend Adapter
+- B34 Crypto Inventory Scanner
+- B35 Crypto Policy Decision
+- B36 Crypto Migration Planner
+- B37 Compliance Evidence Mapping
+- B38 Pipeline Orchestrator
+- B39 Signing Provider Interface
+- B40 Secret Evidence Boundary
+- B41 Workload Identity Provider Adapter
+- B42 Evidence Ownership & IP Rights Ledger
+- B43 Tenant Boundary / Enterprise Data Isolation
+- B44 Crypto-Agility / PQ Readiness Planner
+- B45 TEE / Attestation Provider Adapter
 
-## Immediate Roadmap
+## B28 boundary
 
-- B27A - Phase Manifest Backfill
-- B27B - Repo Professionalization Gate
-- B27C - Developer Distribution Gate
-- B27D - Public Release Readiness and Maturity Gate
-- B28 - Policy Abstraction + Deterministic Risk Signals
-- B29 - Evidence Performance Plane
-- B30 - External Witness Receipt
-- B31 - Tool Data Flow Governance
-- B32 - Audit / SIEM Export
-- B33 - Policy Backend Adapter
+B28 is Policy Abstraction + Deterministic Risk Signals.
 
-## Expansion Roadmap
+B28 is not:
 
-- B34 - Crypto Inventory Scanner
-- B35 - Crypto Policy Decision
-- B36 - Crypto Migration Planner
-- B37 - Compliance Evidence Mapping
-- B38 - Pipeline Orchestrator
-- B39 - Signing Provider Interface
-- B40 - Secret Evidence Boundary
-- B41 - Workload Identity Provider Adapter
-- B42 - Evidence Ownership and IP Rights Ledger
-- B43 - Tenant Boundary / Enterprise Data Isolation
-- B44 - Crypto-Agility / PQ Readiness Planner
-- B45 - TEE / Attestation Provider Adapter
+- ML anomaly detection
+- SIEM
+- SOAR
+- IDS
+- dashboard
+- orchestration engine
+- learning pipeline
+- compliance certification
+- public release readiness
+- developer distribution
 
-## Security Finding and Adversarial Evidence Roadmap
+## Claim boundary
 
-- B46 - Security Finding Ingest Adapter
-- B47 - Authorized DAST / Network Scan Scope Gate
-- B48 - Vulnerability Policy Gate
-- B49 - Remediation Receipt Ledger
-- B50 - Prompt Injection Test Harness
-- B51 - Exception / Risk Acceptance Ledger
-- B52 - Security Evidence Export
-- B53 - Authorized Network Behavior Model
-- B54 - Human Intent Manipulation Guard
-- B55 - Artifact Trust / Reverse Engineering Boundary
-- B56 - Attack Path Hypothesis Graph
-- B57 - Decision Boundary Ledger
-- B58 - Authorized Red-Team Evidence Pack
+Agent Black Box is designed to produce evidence that may support future regulated-enterprise review.
 
-## Roadmap Rules
-
-- No phase starts before the previous product gate is merged and validated.
-- No B28 implementation before B27A and B27B are accepted on main.
-- No active network scan without a scope artifact.
-- No destructive action without approval and reversal planning.
-- No evidence export without governance verdict.
-- No public release without claim-boundary checks.
+It is not certified.
+It does not claim FedRAMP authorization.
+It does not claim FIPS validation.
+It does not claim CISA approval.
+It does not claim DoD, NASA, or Microsoft certification.
+It does not claim full containment.
+It does not claim impossible-to-bypass security.
