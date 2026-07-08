@@ -1,0 +1,24 @@
+{
+  "input": {
+    "receipt_id": "witness-local-sha256-001",
+    "evidence_digest": "sha256:111122223333444455556666777788889999aaaabbbbccccddddeeeeffff0000",
+    "witness_subject": "evidence.receipt.local",
+    "witness_method": "LOCAL_DETERMINISTIC",
+    "issued_at": "2026-07-08T00:00:00Z",
+    "verifier_version": "b30-local-reference"
+  },
+  "expected": {
+    "receipt_id": "witness-local-sha256-001",
+    "evidence_digest": "sha256:111122223333444455556666777788889999aaaabbbbccccddddeeeeffff0000",
+    "witness_subject": "evidence.receipt.local",
+    "witness_method": "LOCAL_DETERMINISTIC",
+    "witness_status": "LOCAL_PREPARED",
+    "issued_at": "2026-07-08T00:00:00Z",
+    "verifier_version": "b30-local-reference",
+    "reason_codes": [
+      "LOCAL_REFERENCE_ONLY",
+      "EVIDENCE_DIGEST_PRESERVED",
+      "NO_EXTERNAL_WITNESS"
+    ]
+  }
+}
