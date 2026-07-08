@@ -1,0 +1,13 @@
+{
+  "input": {
+    "events": [
+      {"verdict": "DENY", "reason_codes": ["UNKNOWN_ACTION"]},
+      {"verdict": "DENY", "reason_codes": ["UNKNOWN_RESOURCE"]},
+      {"verdict": "DENY", "reason_codes": ["UNKNOWN_ACTION"]}
+    ]
+  },
+  "expected": {
+    "signals": ["SIGNAL_REPEATED_DENY"],
+    "reason_codes": ["REPEATED_DENY"]
+  }
+}

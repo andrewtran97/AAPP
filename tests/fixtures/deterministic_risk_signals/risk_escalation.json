@@ -1,0 +1,10 @@
+{
+  "input": {
+    "previous": {"risk_class": "LOW"},
+    "current": {"risk_class": "DESTRUCTIVE"}
+  },
+  "expected": {
+    "signals": ["SIGNAL_RISK_ESCALATION"],
+    "reason_codes": ["LOW_TO_DESTRUCTIVE"]
+  }
+}

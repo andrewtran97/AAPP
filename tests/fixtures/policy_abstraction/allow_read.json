@@ -1,0 +1,24 @@
+{
+  "input": {
+    "subject": "agent.local",
+    "tool": "read_file",
+    "resource": "README.md",
+    "params": {
+      "mode": "read_only"
+    }
+  },
+  "expected": {
+    "subject": "agent.local",
+    "action": "read",
+    "resource": "README.md",
+    "context": {
+      "tool": "read_file",
+      "mode": "read_only"
+    },
+    "risk_class": "LOW",
+    "obligations": [],
+    "reason_codes": [
+      "ACTION_READ"
+    ]
+  }
+}

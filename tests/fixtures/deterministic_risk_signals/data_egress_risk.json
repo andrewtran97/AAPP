@@ -1,0 +1,14 @@
+{
+  "input": {
+    "action": "write",
+    "resource": "customer_data",
+    "context": {
+      "data_class": "restricted",
+      "sink": "external"
+    }
+  },
+  "expected": {
+    "signals": ["SIGNAL_DATA_EGRESS_RISK"],
+    "reason_codes": ["RESTRICTED_DATA_EXTERNAL_SINK"]
+  }
+}
