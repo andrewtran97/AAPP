@@ -232,3 +232,33 @@ If no LICENSE file is present, usage rights are not granted beyond normal reposi
 Apache License 2.0.
 
 See `LICENSE`.
+
+<!-- B27C_DEVELOPER_QUICKSTART_START -->
+## Developer Quickstart
+
+AAPP / Agent Black Box is an AI Agent Control + Evidence Plane for local developer review.
+
+Run the local quickstart:
+
+bash quickstart.sh
+
+Run examples:
+
+bash examples/local-agent/run.sh
+bash examples/github-action/run.sh
+bash examples/mcp-tool-call/run.sh
+
+This quickstart is local-only.
+
+It does not require secrets.
+
+It does not require paid external services.
+
+It does not open a browser.
+
+It does not write runtime evidence into .aapp/.
+
+Claim boundaries:
+
+cat docs/CLAIM_BOUNDARIES.md
+<!-- B27C_DEVELOPER_QUICKSTART_END -->

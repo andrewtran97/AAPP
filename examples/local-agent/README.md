@@ -1,15 +1,13 @@
+# Local Agent Example
 
-Local Agent Example
+Local-only developer example for B27C.
 
-Local-only developer example.
+This example does not call a model.
 
-It does not call a model.
+This example does not call a network service.
 
-It does not call a network service.
-
-It does not write to .aapp/.
+This example does not write to `.aapp/`.
 
 Run:
 
 bash examples/local-agent/run.sh
-

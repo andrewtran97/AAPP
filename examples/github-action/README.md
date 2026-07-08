@@ -1,13 +1,13 @@
+# GitHub Action Example
 
-GitHub Action Example
+Local-only developer example for B27C.
 
-Local-only GitHub Action style event example.
+This example does not call GitHub APIs.
 
-It does not call GitHub APIs.
+This example does not require secrets.
 
-It does not require secrets.
+This example does not upload artifacts.
 
 Run:
 
 bash examples/github-action/run.sh
-

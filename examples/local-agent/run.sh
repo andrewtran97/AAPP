@@ -1,31 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-python3 - <<'PY'
-import datetime
-import hashlib
-import json
-import pathlib
-import tempfile
+OUT_DIR="$(mktemp -d)"
+OUT_FILE="$OUT_DIR/local_agent_demo.json"
 
-payload = {
-"example": "local-agent",
-"subject": "local-developer-agent",
-"action": "read",
-"resource": "repository-docs",
-"policy_verdict": "ALLOW",
-"identity_binding": "local-demo-identity",
-"state_change": False,
-"network": "not_used",
-"timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+cat > "$OUT_FILE" <<'JSON'
+{
+  "example": "local-agent",
+  "subject": "local-developer-agent",
+  "action": "read",
+  "resource": "repository-docs",
+  "policy_verdict": "ALLOW",
+  "network": "not_used",
+  "state_change": false
 }
+JSON
 
-encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
-payload["digest"] = "sha256:" + hashlib.sha256(encoded).hexdigest()
-
-out_dir = pathlib.Path(tempfile.mkdtemp(prefix="aapp-local-agent-"))
-out_file = out_dir / "local_agent_demo.json"
-out_file.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-
-print(f"PASS local-agent example: {out_file}")
-PY
+echo "PASS local-agent example: $OUT_FILE"

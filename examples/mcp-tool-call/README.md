@@ -1,15 +1,13 @@
+# MCP Tool Call Example
 
-MCP Tool Call Example
+Local-only developer example for B27C.
 
-Local-only MCP tool call style example.
+This example does not run an MCP server.
 
-It does not run an MCP server.
+This example does not call external tools.
 
-It does not call external tools.
-
-It does not write to .aapp/.
+This example does not write to `.aapp/`.
 
 Run:
 
 bash examples/mcp-tool-call/run.sh
-

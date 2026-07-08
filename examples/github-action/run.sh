@@ -1,32 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-python3 - <<'PY'
-import datetime
-import hashlib
-import json
-import pathlib
-import tempfile
+OUT_DIR="$(mktemp -d)"
+OUT_FILE="$OUT_DIR/github_action_demo.json"
 
-payload = {
-"example": "github-action",
-"event": "pull_request",
-"repository": "local/aapp-demo",
-"ref": "refs/heads/b27c-developer-distribution-gate",
-"actor": "local-developer",
-"workflow": "aapp-local-validation",
-"policy_precheck": "read_only_example",
-"secrets_required": False,
-"network": "not_used",
-"timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+cat > "$OUT_FILE" <<'JSON'
+{
+  "example": "github-action",
+  "event": "pull_request",
+  "repository": "local/aapp-demo",
+  "actor": "local-developer",
+  "policy_precheck": "read_only_example",
+  "secrets_required": false,
+  "network": "not_used",
+  "artifact_upload": false
 }
+JSON
 
-encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
-payload["digest"] = "sha256:" + hashlib.sha256(encoded).hexdigest()
-
-out_dir = pathlib.Path(tempfile.mkdtemp(prefix="aapp-github-action-"))
-out_file = out_dir / "github_action_demo.json"
-out_file.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-
-print(f"PASS github-action example: {out_file}")
-PY
+echo "PASS github-action example: $OUT_FILE"
