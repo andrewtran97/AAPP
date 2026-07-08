@@ -1,0 +1,30 @@
+{
+  "input": {
+    "subject": "agent.local",
+    "tool": "write_file",
+    "resource": "config.yml",
+    "params": {
+      "mode": "write",
+      "destructive": true
+    }
+  },
+  "expected": {
+    "subject": "agent.local",
+    "action": "write",
+    "resource": "config.yml",
+    "context": {
+      "tool": "write_file",
+      "mode": "write",
+      "destructive": true
+    },
+    "risk_class": "DESTRUCTIVE",
+    "obligations": [
+      "require_approval",
+      "require_reversal_plan"
+    ],
+    "reason_codes": [
+      "ACTION_WRITE",
+      "DESTRUCTIVE_ACTION"
+    ]
+  }
+}

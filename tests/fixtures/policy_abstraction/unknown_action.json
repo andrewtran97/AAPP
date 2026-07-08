@@ -1,0 +1,23 @@
+{
+  "input": {
+    "subject": "agent.local",
+    "tool": "mystery_tool",
+    "resource": "unknown",
+    "params": {}
+  },
+  "expected": {
+    "subject": "agent.local",
+    "action": "unknown",
+    "resource": "unknown",
+    "context": {
+      "tool": "mystery_tool"
+    },
+    "risk_class": "UNKNOWN",
+    "obligations": [
+      "require_review"
+    ],
+    "reason_codes": [
+      "UNKNOWN_ACTION"
+    ]
+  }
+}
