@@ -1,0 +1,32 @@
+{
+  "schema_version": "b36.crypto_migration_planner.input.v1",
+  "record_id": "crypto-policy-decision-001",
+  "evidence_digest": "sha256:7f83b1657ff1fc53b92dc18148a1d65dfa135f11",
+  "policy_verdict": "MIGRATION_REQUIRED",
+  "findings": [
+    {
+      "finding_id": "finding-001",
+      "algorithm": "sha1",
+      "use": "digest",
+      "risk_level": "HIGH",
+      "decision": "DISALLOW",
+      "recommendation": "replace_with_sha256"
+    },
+    {
+      "finding_id": "finding-002",
+      "algorithm": "rsa-1024",
+      "use": "signature",
+      "risk_level": "HIGH",
+      "decision": "DISALLOW",
+      "recommendation": "rotate_to_rsa_3072_or_ecdsa_p256"
+    },
+    {
+      "finding_id": "finding-003",
+      "algorithm": "aes-256-gcm",
+      "use": "encryption",
+      "risk_level": "LOW",
+      "decision": "ALLOW",
+      "recommendation": "no_action"
+    }
+  ]
+}
