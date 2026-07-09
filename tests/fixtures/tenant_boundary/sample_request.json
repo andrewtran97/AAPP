@@ -1,0 +1,8 @@
+{
+  "request_id": "tenant-request-001",
+  "source_tenant": "tenant_a",
+  "destination_tenant": "tenant_a",
+  "action": "evidence_release",
+  "has_governance_verdict": true,
+  "evidence_digest": "sha256:sample"
+}
