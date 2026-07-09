@@ -1,0 +1,16 @@
+{
+  "action": "tool.export",
+  "actor": "agent.local",
+  "event_kind": "tool_data_flow_governance",
+  "evidence_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "governance_verdict": "ALLOWED",
+  "occurred_at": "2026-07-09T00:00:00Z",
+  "policy_verdict": "ALLOW",
+  "reason_codes": [
+    "LOCAL_REFERENCE"
+  ],
+  "record_id": "audit-event-001",
+  "resource": "evidence.local",
+  "schema_version": "aapp.audit_input.v1",
+  "summary": "Tool data flow evaluated without raw secret-like output."
+}
