@@ -1,0 +1,8 @@
+{
+  "record_id": "fixture_training_001",
+  "purpose": "model_training",
+  "raw_secret_stored": false,
+  "payload": {
+    "aws_key": "AKIA1234567890ABCD"
+  }
+}
