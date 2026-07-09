@@ -1,0 +1,9 @@
+{
+  "record_id": "ev-b40-sample",
+  "action": "tool_call",
+  "raw_secret_stored": false,
+  "metadata": {
+    "api_token": "test-only-placeholder",
+    "public_note": "safe"
+  }
+}
