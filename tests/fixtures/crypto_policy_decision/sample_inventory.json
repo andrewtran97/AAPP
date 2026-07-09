@@ -1,0 +1,42 @@
+{
+  "findings": [
+    {
+      "algorithm": "SHA-256",
+      "category": "hash_algorithm",
+      "reason_code": "HASH_ALGORITHM_REFERENCE",
+      "risk_class": "standard_reference"
+    },
+    {
+      "algorithm": "RSA",
+      "category": "signature_or_public_key_algorithm",
+      "reason_code": "SIGNATURE_OR_PUBLIC_KEY_REFERENCE",
+      "risk_class": "inventory_only"
+    },
+    {
+      "algorithm": "AES",
+      "category": "symmetric_encryption_algorithm",
+      "reason_code": "SYMMETRIC_ENCRYPTION_REFERENCE",
+      "risk_class": "inventory_only"
+    },
+    {
+      "algorithm": "MD5",
+      "category": "hash_algorithm",
+      "reason_code": "WEAK_OR_DEPRECATED_CRYPTO",
+      "risk_class": "weak_or_deprecated"
+    },
+    {
+      "algorithm": "DES",
+      "category": "symmetric_encryption_algorithm",
+      "reason_code": "WEAK_OR_DEPRECATED_CRYPTO",
+      "risk_class": "weak_or_deprecated"
+    },
+    {
+      "algorithm": "PRIVATE_KEY_MARKER",
+      "category": "certificate_or_key_marker",
+      "reason_code": "CERTIFICATE_OR_KEY_MARKER",
+      "risk_class": "sensitive_marker"
+    }
+  ],
+  "scanner_verdict": "INVENTORIED",
+  "source_ref": "sample_source.py"
+}
