@@ -1,0 +1,15 @@
+{
+  "purpose": "siem",
+  "original_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "boundary_verdict": "REDACTED",
+  "raw_secret_stored": false,
+  "export_record": {
+    "record_id": "evt_001",
+    "source_ref": "b40.secret_evidence_boundary",
+    "subject": "agent.local",
+    "action": "tool_call",
+    "resource": "repo.main",
+    "decision": "REDACTED",
+    "redaction_marker": "[REDACTED_BY_B40_SECRET_EVIDENCE_BOUNDARY]"
+  }
+}
