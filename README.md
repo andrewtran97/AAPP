@@ -297,3 +297,11 @@ It does not claim external approval.
 
 It does not claim production deployment approval.
 <!-- B27D_PUBLIC_RELEASE_REVIEW_END -->
+
+## Canonical System Definition
+
+Agent Black Box / AAPP is a Capability-Bound Agentic Security Control + Evidence Plane.
+
+The canonical internal system definition is maintained in:
+
+- docs/AGENT_BLACK_BOX_CANONICAL_SYSTEM.md
