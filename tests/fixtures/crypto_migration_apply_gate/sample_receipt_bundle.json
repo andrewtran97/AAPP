@@ -1,0 +1,13 @@
+{
+  "request_id": "req-b39-sample",
+  "requested_action": "apply_migration",
+  "environment": "production",
+  "receipt_bundle": {
+    "schema_version": "b38.crypto_migration_receipt_bundle.v1",
+    "receipt_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "migration_plan_ref": "migration-plan:b36-sample",
+    "dry_run_verdict": "PASSED",
+    "policy_verdict": "ALLOW",
+    "tamper_evident": true
+  }
+}
