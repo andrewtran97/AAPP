@@ -1,0 +1,45 @@
+{
+  "schema_version": "aapp.crypto_migration_dry_run.v1",
+  "subject_ref": "subject:agent-black-box",
+  "resource_ref": "crypto:keyset:tenant-a",
+  "plan_ref": "b36:crypto-migration-plan:001",
+  "dry_run_verdict": "READY",
+  "reason_codes": [
+    "dry_run_ready",
+    "no_live_execution_requested"
+  ],
+  "required_follow_up_actions": [
+    "create_receipt_bundle",
+    "human_review_before_execution"
+  ],
+  "source_refs": {
+    "inventory": {
+      "ref": "b34:crypto-inventory:001",
+      "subject_ref": "subject:agent-black-box",
+      "resource_ref": "crypto:keyset:tenant-a",
+      "plan_ref": "b36:crypto-migration-plan:001",
+      "evidence_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    "policy_decision": {
+      "ref": "b35:crypto-policy-decision:001",
+      "subject_ref": "subject:agent-black-box",
+      "resource_ref": "crypto:keyset:tenant-a",
+      "plan_ref": "b36:crypto-migration-plan:001",
+      "evidence_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "migration_plan": {
+      "ref": "b36:crypto-migration-plan:001",
+      "subject_ref": "subject:agent-black-box",
+      "resource_ref": "crypto:keyset:tenant-a",
+      "plan_ref": "b36:crypto-migration-plan:001",
+      "evidence_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    "dry_run": {
+      "ref": "b37:crypto-migration-dry-run:001",
+      "subject_ref": "subject:agent-black-box",
+      "resource_ref": "crypto:keyset:tenant-a",
+      "plan_ref": "b36:crypto-migration-plan:001",
+      "evidence_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+    }
+  }
+}
