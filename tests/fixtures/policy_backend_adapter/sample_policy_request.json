@@ -1,0 +1,19 @@
+{
+  "action": "tool.read",
+  "context": {
+    "phase": "B33",
+    "runtime": "local_reference"
+  },
+  "obligations": [
+    "record_evidence"
+  ],
+  "policy_input_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "reason_codes": [
+    "LOCAL_REFERENCE"
+  ],
+  "request_id": "policy-backend-request-001",
+  "requested_verdict": "ALLOW",
+  "resource": "repo.local",
+  "schema_version": "aapp.policy_backend_request.v1",
+  "subject": "agent.local"
+}
