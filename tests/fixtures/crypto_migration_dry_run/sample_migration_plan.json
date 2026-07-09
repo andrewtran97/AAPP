@@ -1,0 +1,27 @@
+{
+  "schema_version": "b36.crypto_migration_planner.output.v1",
+  "record_id": "crypto-policy-decision-001",
+  "evidence_digest": "sha256:7f83b1657ff1fc53b92dc18148a1d65dfa135f11",
+  "planner_verdict": "PLAN_REQUIRED",
+  "reason_codes": ["migration_required"],
+  "migration_steps": [
+    {
+      "finding_id": "finding-001",
+      "algorithm": "sha1",
+      "use": "digest",
+      "risk_level": "HIGH",
+      "decision": "DISALLOW",
+      "action": "REPLACE_ALGORITHM",
+      "recommendation": "replace_with_sha256"
+    },
+    {
+      "finding_id": "finding-002",
+      "algorithm": "rsa-1024",
+      "use": "signature",
+      "risk_level": "HIGH",
+      "decision": "DISALLOW",
+      "action": "ROTATE_KEY",
+      "recommendation": "rotate_to_rsa_3072_or_ecdsa_p256"
+    }
+  ]
+}
