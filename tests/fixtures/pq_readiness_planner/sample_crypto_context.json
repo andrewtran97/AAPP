@@ -1,0 +1,18 @@
+{
+  "context_id": "pq-context-001",
+  "owner": "security",
+  "evidence_digest": "sha256:sample",
+  "long_lived_confidentiality": false,
+  "crypto_inventory": [
+    {
+      "asset": "artifact:release-bundle",
+      "algorithm": "ML-KEM",
+      "usage": "key_establishment"
+    }
+  ],
+  "migration_paths": {
+    "RSA": "ML-KEM",
+    "ECDSA": "ML-DSA",
+    "ED25519": "ML-DSA"
+  }
+}
