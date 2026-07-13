@@ -1,0 +1,58 @@
+{
+  "local_static": {
+    "evidence": {
+      "artifact_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "attestation_timestamp": "2026-07-13T11:59:30Z",
+      "evidence_digest": "sha256:79a39862ff8b75a2766e7a22d081b490c1a89c56440ccc60ea2cb3c037eaebf7",
+      "nonce": "nonce-local-001",
+      "policy_version": "policy-v1",
+      "provider_type": "local_static",
+      "runtime_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "schema_version": "aapp.attestation_provider_evidence.v1",
+      "trusted": true,
+      "workload_identity_ref": "workload:builder:v1"
+    },
+    "request": {
+      "evaluated_at": "2026-07-13T12:00:00Z",
+      "expected_artifact_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_evidence_digest": "sha256:79a39862ff8b75a2766e7a22d081b490c1a89c56440ccc60ea2cb3c037eaebf7",
+      "expected_nonce": "nonce-local-001",
+      "expected_policy_version": "policy-v1",
+      "expected_runtime_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "max_age_seconds": 300,
+      "max_future_skew_seconds": 30,
+      "provider_type": "local_static",
+      "request_id": "request-local-001",
+      "schema_version": "aapp.attestation_provider_request.v1",
+      "workload_identity_ref": "workload:builder:v1"
+    }
+  },
+  "tee_attestation_shape": {
+    "evidence": {
+      "artifact_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "attestation_timestamp": "2026-07-13T11:59:45Z",
+      "evidence_digest": "sha256:1bd92afae42c88dbe8fd85a49d1d75d34f3f25a6b40704afe328325b1a7e5b2d",
+      "nonce": "nonce-tee-001",
+      "policy_version": "policy-v1",
+      "provider_type": "tee_attestation_shape",
+      "runtime_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "schema_version": "aapp.attestation_provider_evidence.v1",
+      "trusted": true,
+      "workload_identity_ref": "workload:builder:v1"
+    },
+    "request": {
+      "evaluated_at": "2026-07-13T12:00:00Z",
+      "expected_artifact_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_evidence_digest": "sha256:1bd92afae42c88dbe8fd85a49d1d75d34f3f25a6b40704afe328325b1a7e5b2d",
+      "expected_nonce": "nonce-tee-001",
+      "expected_policy_version": "policy-v1",
+      "expected_runtime_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "max_age_seconds": 300,
+      "max_future_skew_seconds": 30,
+      "provider_type": "tee_attestation_shape",
+      "request_id": "request-tee-001",
+      "schema_version": "aapp.attestation_provider_request.v1",
+      "workload_identity_ref": "workload:builder:v1"
+    }
+  }
+}
