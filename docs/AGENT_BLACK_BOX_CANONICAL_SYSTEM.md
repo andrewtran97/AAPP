@@ -1,361 +1,301 @@
-# Agent Black Box / AAPP — Canonical Internal System Definition
+# Agent Black Box / AAPP — Canonical System V2
 
-## 0. Executive Verdict
+## 0. Status Vocabulary
 
-Agent Black Box / AAPP = Capability-Bound Agentic Security Control + Evidence Plane.
+- `IMPLEMENTED`: present and testable in the current Python-first repository.
+- `REFERENCE`: deterministic local shape or contract; not production enforcement.
+- `TARGET`: intended architecture that is not implemented in this repository.
+- `RESEARCH`: hypothesis requiring a baseline, benchmark, and explicit future authorization.
+- `OUT_OF_SCOPE`: prohibited or deliberately excluded from the current system boundary.
 
-AAPP is the control-and-evidence layer for AI agents acting on software, CI/CD, tools, data, secrets, dependencies, artifacts, infrastructure, and security workflows.
+Status is attached to behavior, not branding. A target or research item must never be presented as implemented.
 
-Short line:
+## 1. Unified Definition
 
-Flight recorder + capability kernel for AI agent actions.
+Agent Black Box / AAPP is a **Capability-Bound Agentic Security Control + Evidence Plane**.
 
-Internal line:
+Public positioning:
 
-AAPP turns AI-agent authority into scoped, caveated, testable, auditable, and reversible security operations.
+> Flight recorder and capability-control layer for AI-agent actions.
 
-## 1. Current Implementation Boundary
+Internal positioning:
 
-Current AAPP is a local reference implementation for AI-agent action evidence.
+> AAPP converts AI-agent authority into operations constrained by explicit scope, identity, capability, policy, approval, data rights, evidence, verification, provenance, and recovery.
 
-Current repo boundary:
+Canonical system formula:
 
-- hook capture
-- MCP tool-call recording
-- Git/CI evidence
-- unified session bundles
-- verification and review path
-- local deterministic reference gates
+```text
+Agent Black Box
+= Deterministic Authority Kernel
++ Capability-Bound Agent Fabric
++ Agent Skill Infrastructure
++ Governed AI Services
++ Evidence & Data Governance Graph
++ Remediation & Recovery
++ Runtime Feedback & Evaluation
+```
 
-AAPP is not currently:
+## 2. Current Repository Boundary
 
-- scanner product
-- SIEM
-- pentest bot
-- dashboard product
-- compliance certification system
-- full agent containment guarantee
-- post-quantum security claim
-- autonomous red-team system
+### IMPLEMENTED
 
-## 2. Unified System Definition
+The repository currently provides a Python-first deterministic reference layer including:
 
-AAPP replaces these fragmented labels:
+- local hook-event capture;
+- MCP tool-call recording;
+- Git/CI evidence capture;
+- unified session bundles;
+- local verification and report paths;
+- deterministic reference gates for scope, policy, identity, evidence, governance, secrets, tenants, crypto migration, and PQ-readiness planning.
 
-- AI Agent Control + Evidence Plane
-- Authorized Exposure Remediation Graph
-- Agentic Cyber-Physical Control & Evidence Plane
-- Agent Capability & Evidence Kernel
-- Agentic Security Control Plane
+### REFERENCE
 
-Canonical definition:
+The deterministic gates demonstrate contracts, verdict shapes, and fail-closed behavior locally. They are not equivalent to production interception, production identity, production DLP, database-backed isolation, or hardened distributed enforcement.
 
-Capability-Bound Agentic Security Control + Evidence Plane.
+### TARGET
 
-## 3. Core Equation
+The authority kernel, capability-bound fabric, skill execution substrate, production provenance adapters, durable recovery, and runtime learning loop are target architecture.
 
-AAPP =
+### RESEARCH
 
-Scope
-+ Identity
-+ Capability
-+ Policy
-+ Tool Boundary
-+ State Boundary
-+ Evidence
-+ Governance
-+ Provenance
-+ Remediation
-+ Runtime Feedback
-+ Incident Learning
+AntSwarm scheduling, device acceleration, multi-model councils, and broad agent-skill compatibility remain benchmark-gated research.
 
-## 4. Execution Chain
+### OUT_OF_SCOPE
 
-Mandate
-→ Scope Contract
-→ Agent / Tool / Workload Identity
-→ Capability Token
-→ Policy Decision
-→ Tool Firewall
-→ Execution Boundary
-→ State Snapshot
-→ Evidence Event
-→ Governance Verdict
-→ Finding / Patch / Receipt
-→ Provenance Update
-→ Runtime Signal Correlation
-→ Incident / Near-Miss Casefile
-→ Closure Receipt
+- unauthorized scanning or exploitation;
+- self-directed offensive action;
+- direct cyber-physical mutation;
+- unrestricted shell, browser, cloud, or production authority;
+- claims of certification, universal correctness, guaranteed containment, or post-quantum security.
 
-## 5. Eight Planes
+## 3. Product Boundary
 
-### 5.1 Agent Control Plane
+AAPP is Agent Action Control & Evidence Infrastructure. It is not an LLM, chatbot, general agent framework, SAST scanner, pentest bot, SIEM, observability dashboard, or security certification product.
 
-Controls agent intent, scope, identity, tool request, policy decision, approval, and execution boundary.
+The first product wedge is an AI coding-agent workflow:
 
-### 5.2 Capability & Identity Plane
+```text
+request -> exact repository scope -> capability/policy gate
+        -> candidate change -> tests -> evidence -> verified receipt
+```
 
-Converts broad agent authority into small, scoped, time-bound capability objects with caveats, issuer, subject, action, resource, expiry, and revocation reference.
+## 4. Compatible Taxonomies
 
-### 5.3 Evidence & Forensic Plane
+Seven structural layers describe topology:
 
-Records requests, decisions, traces, state, evidence digests, redaction verdicts, receipts, signatures, verification results, and casefiles.
+1. Scope Engine
+2. Orchestration Gateway
+3. Six Control Agents
+4. Runtime Evidence Pipeline
+5. Evidence Protocol
+6. Data Governance
+7. Product Surface
 
-### 5.4 Data Governance & Policy-Carrying Data Plane
+Eight control planes describe cross-cutting responsibilities:
 
-Prevents AI agents from leaking secrets, private data, regulated data, training-prohibited data, or tenant data through prompts, tools, logs, exports, reports, or model-training workflows.
+1. Agent Control
+2. Capability & Identity
+3. Evidence & Forensics
+4. Data Governance
+5. Code Safety & Patch Control
+6. Supply Chain & Provenance
+7. Authorized Exposure Remediation
+8. Runtime Feedback & Incident Learning
 
-### 5.5 Code Safety & Patch Control Plane
+Six control agents describe bounded services:
 
-Allows AI agents to propose fixes without bypassing tests, invariants, rollback notes, CI, approval, and post-merge validation.
+1. Discovery / Scanner
+2. Policy Engine
+3. Identity / Attestation
+4. State / Migration
+5. Audit / CDM / Incident
+6. Governance / Data / Compliance
 
-### 5.6 Supply Chain & Provenance Plane
+These are three views of one system. They do not create parallel products or additional control planes.
 
-Tracks where code, dependencies, artifacts, models, datasets, plugins, and build outputs came from.
+## 5. Deterministic Authority Kernel
 
-### 5.7 Authorized Exposure Remediation Graph
+### TARGET
 
-Converts authorized security assessment into remediation, not just findings.
+The microkernel-inspired authority kernel owns only:
 
-### 5.8 Runtime Feedback & Incident Learning Plane
+- schema validation;
+- identity and capability validation;
+- policy invocation and admission control;
+- execution leases and revocation;
+- tenant context and IPC-envelope validation;
+- evidence sequence allocation;
+- bounded service health.
 
-Correlates runtime signals, CI failures, logs, honeynet observations, incident records, near-misses, and analyst feedback into future control improvements.
+The kernel does not contain LLM reasoning. AI recommendations cannot become kernel decisions without deterministic validation and configured authority.
 
-## 6. System Graph
+Kernel laws:
 
-AAPP is a graph, not a linear log.
+- No identity -> no trusted IPC.
+- No scope -> no action.
+- No capability -> no dispatch.
+- No policy -> default deny.
+- No tenant context -> no governed data access.
+- No execution lease -> no tool execution.
+- No evidence sequence -> action does not start.
+- Revoked capability -> terminate or quarantine.
+- AI recommendation != kernel decision.
 
-Node types:
+## 6. Capability-Bound Agent Fabric
 
-- Subject: human, agent, tool, CI job, workload, reviewer, approver
-- Authority: mandate, scope, capability, policy decision, approval, revocation
-- Asset: repo, branch, commit, file, package, API, container, cloud account, IAM role, secret reference, CI workflow, model, dataset, plugin, artifact, runtime service
-- Security object: finding, evidence event, trace, receipt, casefile, patch PR, rollback note, SBOM, signature, provenance statement, runtime signal, disclosure case
+### TARGET
 
-Edge types:
+The fabric is the only trusted route for service discovery, workload identity, authenticated IPC, capability delegation, policy-aware routing, data-locality routing, revocation propagation, replay protection, and evidence handoff.
 
-- subject_requested_action
-- capability_authorizes_action
-- scope_allows_resource
-- policy_decides_request
-- tool_executes_action
-- evidence_records_event
-- finding_affects_asset
-- patch_remediates_finding
-- test_validates_patch
-- rollback_reverses_patch
-- artifact_built_from_commit
-- sbom_describes_artifact
-- signature_attests_artifact
-- runtime_signal_correlates_with_asset
-- casefile_closes_incident
-- receipt_verifies_closure
+Every fabric message must bind sender, recipient, action, scope, capability, policy decision, tenant, classification, payload digest, expiry, and replay nonce. Direct peer calls outside the fabric are prohibited by the target architecture.
 
-If an action cannot be linked to scope, identity, capability, policy, evidence, governance, provenance, and outcome, it is not trusted.
+## 7. Execution Lifecycle
 
-## 7. Control Laws
+```text
+Mandate / Intent
+-> Intent Canonicalization
+-> Risk Class
+-> Scope Contract
+-> Identity
+-> Capability Request
+-> Policy Decision
+-> Approval / Obligations
+-> Tool or Skill Contract
+-> Execution Lease
+-> Pre-State Snapshot
+-> Bounded Execution
+-> Post-State Snapshot
+-> Evidence Events
+-> Governance Verdict
+-> Verification
+-> Provenance
+-> Receipt
+-> Recovery / Incident
+-> Approved Learning Candidate
+```
 
-- No scope → no action.
-- No written authorization → no scan.
-- No policy → default deny.
-- No identity → no trusted execution.
-- No capability → no tool access.
-- No caveat → no elevated action.
-- No expiry → no capability.
-- No revocation path → no capability.
-- No evidence → no done.
-- No governance verdict → no export.
-- No rights → no training use.
-- No verifier → no receipt.
-- No approval → no destructive action.
-- No reversal plan → no production mutation.
-- No test/invariant package → no patch execution.
-- No provenance → no deployment trust.
-- No runtime evidence → no runtime closure.
-- No casefile → no trusted failure closure.
-- No post-merge validation → main not accepted.
-- No exact staged-file guard → no commit.
-- No CI pass → no merge.
-- No issue close before merge and post-merge validation.
+A denied action stops execution but still produces a denied-attempt event, reason codes, and a risk signal.
 
-## 8. Data Classification Plane
+## 8. Evidence and System Graph
+
+### IMPLEMENTED
+
+The repository implements local evidence events, digests, bundles, manifests, verification results, and reports for its scoped reference workflows.
+
+### REFERENCE
+
+Canonical evidence chain:
+
+```text
+structured request -> canonical serialization -> input digest
+-> authority references -> trace events -> previous-event digest
+-> bundle -> manifest -> signature -> verification -> receipt
+```
+
+Evidence can show recorded bytes, sequence membership, signer-to-bytes binding, recorded policy/version references, and a verifier result. It does not establish objective correctness, absence of vulnerabilities, legal finality, signer trustworthiness, or universal immutability.
+
+The system graph connects subjects, authority objects, assets, and security objects through typed evidence-bearing edges.
+
+## 9. Data Governance
+
+### REFERENCE
 
 Classification levels:
 
-- PUBLIC
-- INTERNAL
-- CONFIDENTIAL
-- RESTRICTED
+- `PUBLIC`
+- `INTERNAL`
+- `CONFIDENTIAL`
+- `RESTRICTED`
 
-Core law:
+Every governed data object must bind classification, owner, tenant, purpose, rights reference, allowed and blocked flows, retention, legal hold, redaction requirement, and raw-secret presence.
 
-No classification → no access, export, training, or evidence release.
+Core laws:
 
-Required classification envelope fields:
+- No classification -> no governed flow.
+- No owner or purpose -> no processing.
+- No tenant boundary -> no cross-tenant release.
+- No governance verdict -> no export.
+- No rights -> no training.
+- Raw secret present -> no export, training, or public report.
 
-- data_id
-- classification
-- owner
-- tenant
-- source
-- purpose
-- allowed_flows
-- blocked_flows
-- retention
-- redaction_required
-- approval_required
-- audit_required
-- dlp_required
-- raw_secret_present
+Current gates are deterministic references, not production DLP or production tenant isolation.
 
-Governance verdicts:
+## 10. Governed AI Services
 
-- ALLOWED
-- REDACTED
-- BLOCKED
-- MALFORMED
-- UNSAFE
-- UNSUPPORTED
-- RETENTION_VIOLATION
-- EXPORT_NOT_ALLOWED
-- TRAINING_NOT_ALLOWED
-- TENANT_BOUNDARY_VIOLATION
-- CLASSIFICATION_REQUIRED
-- CLASSIFICATION_DOWNGRADE_BLOCKED
-- APPROVAL_REQUIRED
-- MULTI_APPROVAL_REQUIRED
-- WATERMARK_REQUIRED
-- DLP_REQUIRED
-- LEGAL_HOLD_BLOCKED
+### REFERENCE
 
-Data classification laws:
+Bounded advisory roles are Triage Agent, Patch Agent, Recovery Agent, and Explain Impact Agent. Their outputs are schema-bound proposals.
 
-- No owner → no access.
-- No tenant → no cross-tenant flow.
-- No purpose → no processing.
-- No allowed flow → block.
-- Blocked flow matched → block.
-- No approval → no Confidential export.
-- No multi-approval → no Restricted export.
-- No audit → no Restricted access.
-- No DLP/export gate → no Confidential or Restricted export.
-- No redaction → no Restricted evidence release.
-- No rights → no training use.
-- No retention policy → no storage.
-- Legal hold active → no deletion.
-- Raw secret present → no export, no training, no public report.
-- Classification downgrade without approval → block.
+Authority chain:
 
-## 9. Business Metrics
+```text
+AI proposes -> schema validates -> deterministic gates decide
+-> tests/verifier evaluate -> configured authority approves
+-> evidence records
+```
 
-AAPP optimizes for:
+AI cannot create scope, capability, final policy allow, approval, evidence identity, receipt identity, signature, verified digest, merge decision, or deployment decision.
 
-- agent_action_coverage
-- deny_stop_rate
-- evidence_verify_rate
-- raw_secret_escape_rate
-- policy_decision_latency_ms
-- patch_PR_acceptance_rate
-- false_positive_triage_rate
-- mean_time_to_casefile
-- mean_time_to_remediation
-- post_merge_validation_pass_rate
-- unsupported_claim_count
+## 11. Agent Skill Infrastructure
 
-Targets:
+### REFERENCE / TARGET
 
-- data_classification_coverage = 100%
-- raw_secret_escape_rate = 0
-- unsupported_claim_count = 0
+The governed skill substrate consists of Skill Registry, Skill Package Manager, Skill Contract, Capability Runtime, Durable Task Bus, and Evaluation Service.
 
-## 10. Implementation Discipline
+The contract invariant is:
 
-Current reference stack:
+```text
+observed_accesses subset_of granted_capabilities subset_of requested_permissions
+observed_effects subset_of declared_effects
+```
 
-- Python 3.10+
-- Bash
-- unittest
-- JSON / JSONL
-- Markdown
-- GitHub Actions
-- Git
-- OpenSSL / Ed25519 workflows
-- HMAC-SHA384 internal verification
+Detailed boundaries are defined in `docs/AGENT_SKILL_INFRASTRUCTURE.md`.
 
-Current implementation discipline:
+## 12. Recovery and Reliability Surfaces
 
-- one phase = one bounded control primitive
-- one issue = one failure mode
-- one branch = one product gate
-- one PR = exact file manifest
-- no runtime behavior change unless scoped
-- no broad rewrite
-- no Go/Rust/TypeScript production rewrite before schema freeze
+### TARGET
 
-Target architecture anchors:
+State-changing actions use one recovery class: `REVERSE`, `COMPENSATE`, `MITIGATE`, `REVOKE`, `CONTAIN`, or `IRREVERSIBLE`.
 
-- Go: control API, policy service, orchestration
-- Rust: evidence engine, scanner core, CLI
-- TypeScript: UI, SDK, VS Code/Cursor extension
-- OPA/Rego: policy backend
-- PostgreSQL: ledgers, state, casefiles
-- Object store: evidence blobs/packages
-- OpenTelemetry: traces, metrics, logs
-- SPIFFE/SVID: workload identity
-- SLSA/Sigstore/Rekor: supply-chain signing/provenance
-- CycloneDX/SPDX: SBOM / AI-BOM / CBOM
+Control laws:
 
-These anchors are not current implementation-complete claims.
+- No pre-state -> no reversible claim.
+- No recovery class -> no mutable action.
+- No idempotency key -> no automatic retry.
+- Irreversible external action -> explicit approval.
+- Failed recovery -> incident casefile.
 
-## 11. Claim Boundary
+Agent Flow Capture, AgentCTS, Compensation & Recovery, and Open Skill Runtime are product surfaces under AAPP Core, not independent authority systems.
 
-Do not claim:
+## 13. Open-Source Doctrine
 
-- self-directed offensive-action claim
-- unrestricted scanning claim
-- zero-risk claim
-- fault-free claim
-- fraud-impossibility claim
-- artifact-cleanliness claim
-- containment-guarantee claim
-- production-security-maturity claim
-- compliance-certification claim
-- FedRAMP-readiness claim
-- FIPS-readiness claim
-- CISA-approval claim
-- defense-grade-security claim
-- post-quantum-security claim
-- automatic-merge claim
-- production-self-repair claim
-- legal-evidence-finality claim
-- immutability claim
-- tamper-impossibility claim
-- leak-impossibility claim
-- DLP-completeness claim
-- tenant-isolation-completeness claim
+### TARGET
 
-Allowed wording:
+`REUSE -> CONFIGURE -> WRAP -> EXTEND -> CONTRIBUTE UPSTREAM -> FORK -> REPLACE`
 
-- local reference implementation
-- canonical internal system definition
-- target architecture
-- evidence-supporting
-- tamper-evident
-- scope-bound
-- capability-bound
-- policy-gated
-- reviewable
-- reversible
-- classification-based control model
-- redaction-aware
-- export-gated
-- training-gated
-- tenant-aware
-- designed to reduce data exposure risk
-- designed to support future regulated-enterprise review
+Dependencies require known source/version, license review, security owner, inventory, vulnerability review, reproducible baseline, benchmark, and rollback/replacement path. Detailed rules are in `docs/OPEN_SOURCE_STRATEGY.md`.
 
-## 12. Final Internal Line
+## 14. AntSwarm Boundary
 
-AAPP is the security operating layer for AI agents: every action, tool call, code change, data flow, artifact, runtime signal, and remediation path is constrained by scope, capability, policy, identity, evidence, governance, provenance, and review.
+### RESEARCH
 
-Anything else is either a log viewer, a scanner, or marketing noise.
+AntSwarm may select among already eligible candidate workflows. It cannot grant authority, change policy, approve actions, validate its own work, or mutate reward signals directly. Details are in `docs/ANTSWARM_COORDINATION_PLANE.md`.
+
+## 15. Implementation Discipline
+
+- One gate -> one issue -> one branch -> one pull request -> one acceptance record.
+- No exact manifest -> no commit.
+- No CI -> no merge.
+- No post-merge validation -> main not accepted.
+- Target architecture is not implementation evidence.
+- Documentation does not authorize runtime behavior.
+
+## 16. Claim Boundary
+
+Allowed descriptions include deterministic reference implementation, local-only reference behavior, tamper-evident where technically supported, reviewable evidence, bounded authority, capability-limited action, advisory AI, and governed data.
+
+Do not claim external certification, regulatory authorization, universal safety, guaranteed containment, objective truth, legal finality, complete DLP, complete tenant isolation, production maturity, or post-quantum security unless independently established and explicitly authorized.
+
+## 17. Final Canonical Line
+
+> Agent Black Box is the capability-bound security, execution, and evidence operating layer for AI agents. It constrains requests, tool calls, skills, data flows, state changes, artifacts, recovery actions, and learning proposals through explicit scope, identity, capability, policy, governance, provenance, verification, and review.
