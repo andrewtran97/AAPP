@@ -1,0 +1,21 @@
+{
+  "expected_content": "alpha\nafter\nomega\n",
+  "initial_content": "alpha\nbefore\nomega\n",
+  "request": {
+    "capability_ref": "capability:file-mutation:test",
+    "expected_pre_state_digest": "sha384:4c73209991c0b97e2fc9dd859ad5861b961f74c0320c9ce69ba4b25a9e2ea23a397f9550e9e7e9ec92cefea85de74f3b",
+    "idempotency_key": "idem-b44b-fixture-001",
+    "identity_ref": "identity:agent:test",
+    "new_text": "after",
+    "old_text": "before",
+    "operation": "replace_exact_text",
+    "policy_decision": "ALLOW",
+    "policy_decision_ref": "policy-decision:b44b:allow",
+    "recovery_class": "REVERSE",
+    "request_id": "req-b44b-fixture-001",
+    "schema_version": "aapp.bounded_mutation.request.v1",
+    "scope_ref": "scope:b44b:fixture",
+    "target_relative_path": "workspace/target.txt",
+    "workspace_root": "__TEMP_WORKSPACE__"
+  }
+}
