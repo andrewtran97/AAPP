@@ -20,6 +20,7 @@ Did denied action execution stop?
 Was the denied attempt still recorded?
 Can the evidence bundle be verified later?
 Can tampering be detected?
+```
 Agent Black Box is built for that boundary.
 
 What it is
@@ -305,3 +306,11 @@ Agent Black Box / AAPP is a Capability-Bound Agentic Security Control + Evidence
 The canonical internal system definition is maintained in:
 
 - docs/AGENT_BLACK_BOX_CANONICAL_SYSTEM.md
+
+## Phase Governance
+
+Future AAPP phases must follow:
+
+- [Phase Manifest Standard](docs/PHASE_MANIFEST_STANDARD.md)
+- [Phase Writing Standard](docs/PHASE_WRITING_STANDARD.md)
+- [Phase Standard Adoption](docs/PHASE_STANDARD_ADOPTION.md)

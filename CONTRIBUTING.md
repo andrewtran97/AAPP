@@ -74,3 +74,15 @@ compliance-readiness language
 agent containment guarantees
 production certification language
 post-quantum security language
+
+## Phase Writing Standard
+
+All new AAPP phases must follow:
+
+- `docs/PHASE_MANIFEST_STANDARD.md`
+- `docs/PHASE_WRITING_STANDARD.md`
+- `docs/PHASE_STANDARD_ADOPTION.md`
+
+New phase work requires written authorization, an exact file boundary, explicit non-goals, deterministic validation, failure handling, and post-merge acceptance.
+
+Historical phase notes are not rewritten solely to adopt the current standard.
