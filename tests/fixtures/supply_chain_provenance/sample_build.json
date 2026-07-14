@@ -1,0 +1,57 @@
+{
+  "valid": {
+    "build_record": {
+      "artifact": {
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": "dist/example.tar.gz"
+      },
+      "builder": {
+        "id": "builder:local:v1",
+        "trusted": true
+      },
+      "finished_at": "2026-07-13T12:00:01Z",
+      "materials": [
+        {
+          "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "uri": "git+https://example.invalid/org/repo@0123456789abcdef0123456789abcdef01234567"
+        }
+      ],
+      "provenance_digest": "sha256:93a3666a2436435444bc764fda52030173ced2b15ece7eea2cb633650d1c5af2",
+      "schema_version": "aapp.supply_chain_provenance_build.v1",
+      "source": {
+        "commit": "0123456789abcdef0123456789abcdef01234567",
+        "repository": "https://example.invalid/org/repo"
+      },
+      "source_evidence_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "started_at": "2026-07-13T12:00:00Z",
+      "workflow": {
+        "id": "workflow:reference-build:v1"
+      }
+    },
+    "request": {
+      "expected_artifact": {
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": "dist/example.tar.gz"
+      },
+      "expected_builder": {
+        "id": "builder:local:v1"
+      },
+      "expected_materials": [
+        {
+          "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "uri": "git+https://example.invalid/org/repo@0123456789abcdef0123456789abcdef01234567"
+        }
+      ],
+      "expected_source": {
+        "commit": "0123456789abcdef0123456789abcdef01234567",
+        "repository": "https://example.invalid/org/repo"
+      },
+      "expected_source_evidence_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected_workflow": {
+        "id": "workflow:reference-build:v1"
+      },
+      "request_id": "request-001",
+      "schema_version": "aapp.supply_chain_provenance_request.v1"
+    }
+  }
+}
