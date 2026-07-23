@@ -1,0 +1,71 @@
+{
+  "valid": {
+    "request": {
+      "schema_version": "aapp.bom_export_request.v1",
+      "request_id": "request-001",
+      "output_format": "CYCLONEDX_JSON",
+      "source_evidence_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "inventory": {
+        "components": [
+          {
+            "id": "app",
+            "name": "reference-app",
+            "version": "1.0.0",
+            "type": "application",
+            "license": "Apache-2.0"
+          },
+          {
+            "id": "library",
+            "name": "reference-library",
+            "version": "2.0.0",
+            "type": "library",
+            "license": "MIT"
+          }
+        ],
+        "dependencies": [
+          {
+            "id": "dependency-1",
+            "from": "app",
+            "to": "library"
+          }
+        ],
+        "cryptographic_assets": [
+          {
+            "id": "crypto-signing",
+            "algorithm": "Ed25519"
+          }
+        ],
+        "models": [
+          {
+            "id": "model-reference",
+            "name": "synthetic-model"
+          }
+        ],
+        "datasets": [
+          {
+            "id": "dataset-reference",
+            "name": "synthetic-dataset"
+          }
+        ],
+        "runtimes": [
+          {
+            "id": "runtime-python",
+            "name": "Python"
+          }
+        ],
+        "services": [
+          {
+            "id": "service-api",
+            "name": "reference-api"
+          }
+        ],
+        "provenance_refs": [
+          "provenance-reference-1"
+        ],
+        "evidence_refs": [
+          "evidence-reference-1"
+        ]
+      }
+    }
+  }
+}
